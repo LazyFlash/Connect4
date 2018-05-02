@@ -4,311 +4,318 @@
 
 
 
-//¸Ç Ã³À½¿¡ ¼±°ø ÈÄ°ø ¼±ÅÃÇÏ°Ô ÇØ¼­ ÀÎ°øÁö´ÉÀ» M, ÇÃ·¹ÀÌ¾î(»ó´ë)¸¦ P·Î ÀúÀå
-//ÈÄ°øÀÏ ¶§µµ ¶È°°ÀÌ ³ª¸¦ max·Î ÇÏ´Â 
+//ë§¨ ì²˜ìŒì— ì„ ê³µ í›„ê³µ ì„ íƒí•˜ê²Œ í•´ì„œ ì¸ê³µì§€ëŠ¥ì„ M, í”Œë ˆì´ì–´(ìƒëŒ€)ë¥¼ Pë¡œ ì €ì¥
+//í›„ê³µì¼ ë•Œë„ ë˜‘ê°™ì´ ë‚˜ë¥¼ maxë¡œ í•˜ëŠ”
 
 int main(void) {
-
-	int depth = 10;
-
-	char state[6][7] = {
-		{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
-	{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
-	{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
-	{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
-	{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
-	{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' } };
-
-
-	//ÀÌÇÏÀÇ ¸®½ºÆ® Ã¤¿ì°í ºñ¿ì´Â °úÁ¤ÀÌ °ÔÀÓÀÌ ³¡³ªÁö ¾Ê´Â µ¿¾È ¹İº¹¹® ¾È¿¡ µé¾î°¡°Ô µÊ
-
-	List* childList = createList();
-	int gameIsnotTerminal = 1;
-	Node* curnode;
-
-
-
-
-	//printf("%d\n", childList->firstnode->score);
-	//printf("%d\n", childList->lastnode->score);
-	//printf("%d\n", childList->firstnode->nextsearch->nextsearch->score);
-
-	//¸®½ºÆ® ÀÛµ¿ Ã¼Å©
-	/*appendNextNodes(childList, state, 'M');
-	curnode = childList->firstnode;
-	while (curnode != NULL) {
-	draw(curnode->stateboard);
-	curnode = curnode->nextsearch;
-	}
-	printf("ÃÖÃÊ state »óÅÂ:\n");
-	draw(state);*/
-
-	//Alpha Beta call Å×½ºÆ®
-	int maxscore;
-	int maxindex;
-	int index;
-	int win = 0;
-	int playerchoice;
-	int dummy;
-	int turn = 1; //mod 2 1Àº ¼±°ø Â÷·Ê 0Àº ÈÄ°ø Â÷·Ê
-				  //ÀÌÇÏ°¡ Game Turn ¹İº¹¹® ³»ºÎ
-	int AIfirst; //1ÀÌ¸é AI°¡ ¼±°ø, 0ÀÌ¸é AI°¡ ÈÄ°ø
-	time_t start; //start ½Ã°£°ú end ½Ã°£
-	time_t end;
-	double interval = 0; //°É¸° ½Ã°£
-	int mode = 0; //SearchÀÎ°¡ RuleÀÎ°¡
-
-
-	printf("¼±°øÀ¸·Î ÇÏ½Ã°Ú½À´Ï±î? ¼±°øÀÌ¸é 1, ÈÄ°øÀÌ¸é 0 ÀÔ·Â ");
-	scanf_s("%d", &playerchoice);
-	getchar();
-	if (playerchoice == 1) {
-		AIfirst = 0;
-	}
-	else if (playerchoice == 0) {
-		AIfirst = 1;
-	}
-
-	if (AIfirst) {
-
-		while (gameIsnotTerminal) {
-			printf("\n<<turn%d>>\n", turn);
-			if (turn % 2 == 1) {   //AIÀÇ Â÷·Ê
-				printf("Search·Î ÇÏ½Ã°Ú½À´Ï±î Rule·Î ÇÏ½Ã°Ú½À´Ï±î? Search¸é 1, RuleÀÌ¸é 2 ÀÔ·Â ");     //ÀÌ ÀÚ¸®¿¡ RuleÀÌ³Ä Search³Ä ¹¯´Â ÄÚµå ³Ö±â
-				scanf_s("%d", &mode);
-				getchar();    //turn==1ÀÏ ¶§´Â °øÅë ÄÚµå ¾²±â. if(turn==1){} ÀÌÇÏ·Î if(Rule){} ³Ö±â
-				start = time(NULL);
-				if (turn == 1) {
-					end = time(NULL);
-					interval = difftime(end, start);
-					dummy = nextState(state, 2, 'M');
-					printf("%fÃÊ °É¸²\n", interval);
-					if (mode == 1)
-						printf("Search mode: 3¹ø column¿¡ Âø¼ö\n");
-					else if (mode == 2)
-						printf("Rule mode: 3¹ø column¿¡ Âø¼ö\n");
-					draw(state);
-					turn++;
-
-					continue;
-				}
-				if (mode == 1) {   //Search ¸ğµå
-					appendNextNodes(childList, state, 'M');
-					curnode = childList->firstnode;
-					while (curnode != NULL) {
-						//printf("%d\n", nodenum);
-						//nodenum++;
-						//if(!losingMove(curnode->stateboard))  //losing move¸é ¾ÖÃÊ¿¡ ÇÔ¼öµµ ¾È È£ÃâÇÏµµ·Ï
-						curnode->score = AlphaBeta(curnode->stateboard, depth, -1000000000, 1000000000, 'P');
-						curnode = curnode->nextsearch;
-					}
-					curnode = childList->firstnode;
-					maxscore = curnode->score;
-					index = curnode->col;
-					maxindex = index;
-					while (curnode != NULL) { //col0~col6±îÁö ¼ø¼­´ë·Î appendÇß¾úÀ½.
-						printf("%d¹øÂ° col¿¡ µÎ¸é Á¡¼ö: %d\n", curnode->col + 1, curnode->score);
-						if (curnode->score > maxscore) {
-							maxindex = curnode->col;
-							maxscore = curnode->score;
-						}
-						curnode = curnode->nextsearch;
-
-					}
-					end = time(NULL);
-					dummy = nextState(state, maxindex, 'M');
-					//°áÁ¤ ÈÄ Âø¼ö ¿Ï·á
-
-					interval = difftime(end, start);
-					printf("%fÃÊ °É¸²\n", interval);
-					printf("Search mode: %d¹ø column¿¡ Âø¼ö\n", maxindex + 1);
-					emptyList(childList);
-				}
-				else if (mode == 2) {  //Rule ¸ğµå
-
-
-					printf("%fÃÊ °É¸²\n", interval);
-					//printf("Rule mode: %d¹ø column¿¡ Âø¼ö\n");
-				}
-			}
-			else {
-				while (1) {
-					printf("´ç½ÅÀÇ Â÷·ÊÀÔ´Ï´Ù. µÑ columnÀ» °í¸£¼¼¿ä:(1-7)");
-					scanf_s("%d", &playerchoice);
-					getchar();
-					playerchoice--;
-					if (state[0][playerchoice] == 'X') {
-						dummy = nextState(state, playerchoice, 'P');
-						break;
-					}
-					printf("ºÒ°¡´ÉÇÑ ¼öÀÔ´Ï´Ù. ´Ù½Ã °ñ¶óÁÖ¼¼¿ä.\n");
-				}
-
-			}
-
-			draw(state);
-			win = winCheck(state);
-			if (win == 1) {
-				printf("AI MÀÌ ½Â¸®\n");
-				gameIsnotTerminal = 0;
-			}
-			else if (win == -1) {
-				printf("ÇÃ·¹ÀÌ¾î P°¡ ½Â¸®\n");
-				gameIsnotTerminal = 0;
-			}
-			turn++;
-			if (turn == 12) {
-				depth = 11;
-			}
-			else if (turn == 12) {
-				depth = 13;
-			}
-			else if (turn == 15) {
-				depth = 14;
-			}
-			else if (turn == 17) {
-				depth = 16;
-			}
-			else if (turn == 19) {
-				depth = 17;
-			}
-			else if (turn == 21) {
-				depth = 19;
-			}
-			else if (turn == 43) {
-				printf("¹«½ÂºÎ\n");
-				break;
-			}
-		}
-	}
-	else {
-		draw(state);
-		while (gameIsnotTerminal) {
-			printf("\n<<turn%d>>\n", turn);
-			if (turn % 2 == 0) {
-				printf("Search·Î ÇÏ½Ã°Ú½À´Ï±î Rule·Î ÇÏ½Ã°Ú½À´Ï±î? Search¸é 1, RuleÀÌ¸é 2 ÀÔ·Â ");     //ÀÌ ÀÚ¸®¿¡ RuleÀÌ³Ä Search³Ä ¹¯´Â ÄÚµå ³Ö±â
-				scanf_s("%d", &mode);
-				getchar();
-				start = time(NULL);
-
-				if (turn == 2) {
-					end = time(NULL);
-					interval = difftime(end, start);
-					dummy = nextState(state, 3, 'M');
-					printf("%fÃÊ °É¸²\n", interval);
-					if (mode == 1)
-						printf("Search mode: 4¹ø column¿¡ Âø¼ö\n");
-					else if (mode == 2)
-						printf("Rule mode: 4¹ø column¿¡ Âø¼ö\n");
-					draw(state);
-					turn++;
-
-
-					continue;
-				}
-
-				if (mode == 1) {  //Search ¸ğµå
-					appendNextNodes(childList, state, 'M');
-					curnode = childList->firstnode;
-					while (curnode != NULL) {
-						//printf("%d\n", nodenum);
-						//nodenum++;
-						//if(!losingMove(curnode->stateboard))  //losing move¸é ¾ÖÃÊ¿¡ ÇÔ¼öµµ ¾È È£ÃâÇÏµµ·Ï
-						curnode->score = AlphaBeta(curnode->stateboard, depth, -1000000000, 1000000000, 'P');
-						curnode = curnode->nextsearch;
-					}
-					curnode = childList->firstnode;
-					maxscore = curnode->score;
-					index = curnode->col;
-					maxindex = index;
-					while (curnode != NULL) { //col0~col6±îÁö ¼ø¼­´ë·Î appendÇß¾úÀ½.
-						printf("%d¹øÂ° col¿¡ µÎ¸é Á¡¼ö: %d\n", curnode->col + 1, curnode->score);
-						if (curnode->score > maxscore) {
-							maxindex = curnode->col;
-							maxscore = curnode->score;
-						}
-						curnode = curnode->nextsearch;
-
-					}
-					end = time(NULL);
-					dummy = nextState(state, maxindex, 'M');
-
-					interval = difftime(end, start);
-					printf("%fÃÊ °É¸²\n", interval);
-					printf("Search mode: %d¹ø column¿¡ Âø¼ö\n", maxindex + 1);
-					emptyList(childList);  //ÇöÀçÀÇ ¹Ù·Î ´ÙÀ½ ÀÚ½ÄµéÀÇ Á¡¼ö¸Å±èÀÌ ³¡³ª°í ¼±ÅÃÀ» ¸¶Ä¡¸é childList¸¦ ºñ¿ö³½´Ù.
-				}
-				else if (mode == 2) {  //Rule ¸ğµå
-
-					printf("%fÃÊ °É¸²\n", interval);
-					//printf("Rule mode: %d¹ø column¿¡ Âø¼ö\n");
-				}
-			}
-			else {
-				while (1) {
-					printf("´ç½ÅÀÇ Â÷·ÊÀÔ´Ï´Ù. µÑ columnÀ» °í¸£¼¼¿ä:(1-7)");
-					scanf_s("%d", &playerchoice);
-					getchar();
-					playerchoice--;
-					if (state[0][playerchoice] == 'X') {
-						dummy = nextState(state, playerchoice, 'P');
-						break;
-					}
-					printf("ºÒ°¡´ÉÇÑ ¼öÀÔ´Ï´Ù. ´Ù½Ã °ñ¶óÁÖ¼¼¿ä.\n");
-				}
-
-			}
-
-			draw(state);
-			win = winCheck(state);
-			if (win == 1) {
-				printf("AI MÀÌ ½Â¸®\n");
-				gameIsnotTerminal = 0;
-			}
-			else if (win == -1) {
-				printf("ÇÃ·¹ÀÌ¾î P°¡ ½Â¸®\n");
-				gameIsnotTerminal = 0;
-			}
-			turn++;
-			if (turn == 12) {
-				depth = 11;
-			}
-			else if (turn == 12) {
-				depth = 13;
-			}
-			else if (turn == 15) {
-				depth = 14;
-			}
-			else if (turn == 17) {
-				depth = 16;
-			}
-			else if (turn == 19) {
-				depth = 17;
-			}
-			else if (turn == 21) {
-				depth = 19;
-			}
-			else if (turn == 43) {
-				printf("¹«½ÂºÎ\n");
-				break;
-			}
-		}
-
-	}
-
-
-
-
-	/*curnode = childList->firstnode;
-	while (curnode != NULL) {
-	printf("%d\n", curnode->score);
-	curnode = curnode->nextsearch;
-	}*/
-
-
-	//printf("%d", childList->firstnode->score);
-
-
-	getchar();
-	return 0;
+    
+    int depth = 10;
+    
+    char state[6][7] = {
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
+        { 'X', 'X', 'X', 'X', 'X', 'X', 'X' } };
+    
+    
+    //ì´í•˜ì˜ ë¦¬ìŠ¤íŠ¸ ì±„ìš°ê³  ë¹„ìš°ëŠ” ê³¼ì •ì´ ê²Œì„ì´ ëë‚˜ì§€ ì•ŠëŠ” ë™ì•ˆ ë°˜ë³µë¬¸ ì•ˆì— ë“¤ì–´ê°€ê²Œ ë¨
+    
+    List* childList = createList();
+    int gameIsnotTerminal = 1;
+    Node* curnode;
+    
+    
+    
+    
+    //printf("%d\n", childList->firstnode->score);
+    //printf("%d\n", childList->lastnode->score);
+    //printf("%d\n", childList->firstnode->nextsearch->nextsearch->score);
+    
+    //ë¦¬ìŠ¤íŠ¸ ì‘ë™ ì²´í¬
+    /*appendNextNodes(childList, state, 'M');
+     curnode = childList->firstnode;
+     while (curnode != NULL) {
+     draw(curnode->stateboard);
+     curnode = curnode->nextsearch;
+     }
+     printf("ìµœì´ˆ state ìƒíƒœ:\n");
+     draw(state);*/
+    
+    //Alpha Beta call í…ŒìŠ¤íŠ¸
+    int maxscore;
+    int maxindex;
+    int index;
+    int win = 0;
+    int playerchoice;
+    int dummy;
+    int turn = 1; //mod 2 1ì€ ì„ ê³µ ì°¨ë¡€ 0ì€ í›„ê³µ ì°¨ë¡€
+    //ì´í•˜ê°€ Game Turn ë°˜ë³µë¬¸ ë‚´ë¶€
+    int AIfirst; //1ì´ë©´ AIê°€ ì„ ê³µ, 0ì´ë©´ AIê°€ í›„ê³µ
+    time_t start; //start ì‹œê°„ê³¼ end ì‹œê°„
+    time_t end;
+    double interval = 0; //ê±¸ë¦° ì‹œê°„
+    int mode = 0; //Searchì¸ê°€ Ruleì¸ê°€
+    
+    
+    printf("ì„ ê³µìœ¼ë¡œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ? ì„ ê³µì´ë©´ 1, í›„ê³µì´ë©´ 0 ì…ë ¥ ");
+    scanf("%d", &playerchoice);
+    getchar();
+    if (playerchoice == 1) {
+        AIfirst = 0;
+    }
+    else if (playerchoice == 0) {
+        AIfirst = 1;
+    }
+    
+    if (AIfirst) {
+        
+        while (gameIsnotTerminal) {
+            printf("\n<<turn%d>>\n", turn);
+            if (turn % 2 == 1) {   //AIì˜ ì°¨ë¡€
+                printf("Searchë¡œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ Ruleë¡œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ? Searchë©´ 1, Ruleì´ë©´ 2 ì…ë ¥ ");     //ì´ ìë¦¬ì— Ruleì´ëƒ Searchëƒ ë¬»ëŠ” ì½”ë“œ ë„£ê¸°
+                scanf("%d", &mode);
+                getchar();    //turn==1ì¼ ë•ŒëŠ” ê³µí†µ ì½”ë“œ ì“°ê¸°. if(turn==1){} ì´í•˜ë¡œ if(Rule){} ë„£ê¸°
+                start = time(NULL);
+                if (turn == 1) {
+                    end = time(NULL);
+                    interval = difftime(end, start);
+                    dummy = nextState(state, 2, 'M');
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    if (mode == 1)
+                        printf("Search mode: 3ë²ˆ columnì— ì°©ìˆ˜\n");
+                    else if (mode == 2)
+                        printf("Rule mode: 3ë²ˆ columnì— ì°©ìˆ˜\n");
+                    draw(state);
+                    turn++;
+                    
+                    continue;
+                }
+                
+                if (mode == 1) {   //Search ëª¨ë“œ
+                    appendNextNodes(childList, state, 'M');
+                    curnode = childList->firstnode;
+                    while (curnode != NULL) {
+                        //printf("%d\n", nodenum);
+                        //nodenum++;
+                        //if(!losingMove(curnode->stateboard))  //losing moveë©´ ì• ì´ˆì— í•¨ìˆ˜ë„ ì•ˆ í˜¸ì¶œí•˜ë„ë¡
+                        curnode->score = AlphaBeta(curnode->stateboard, depth, -1000000000, 1000000000, 'P');
+                        curnode = curnode->nextsearch;
+                    }
+                    curnode = childList->firstnode;
+                    maxscore = curnode->score;
+                    index = curnode->col;
+                    maxindex = index;
+                    while (curnode != NULL) { //col0~col6ê¹Œì§€ ìˆœì„œëŒ€ë¡œ appendí–ˆì—ˆìŒ.
+                        printf("%dë²ˆì§¸ colì— ë‘ë©´ ì ìˆ˜: %d\n", curnode->col + 1, curnode->score);
+                        if (curnode->score > maxscore) {
+                            maxindex = curnode->col;
+                            maxscore = curnode->score;
+                        }
+                        curnode = curnode->nextsearch;
+                        
+                    }
+                    end = time(NULL);
+                    dummy = nextState(state, maxindex, 'M');
+                    //ê²°ì • í›„ ì°©ìˆ˜ ì™„ë£Œ
+                    
+                    interval = difftime(end, start);
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    printf("Search mode: %dë²ˆ columnì— ì°©ìˆ˜\n", maxindex + 1);
+                    emptyList(childList);
+                }
+                else if (mode == 2) {  //Rule ëª¨ë“œ
+                    
+                    int ruleresult = Rule(state, turn, 'M');
+                    dummy = nextState(state, ruleresult, 'M');
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    printf("Rule mode: %dë²ˆ columnì— ì°©ìˆ˜\n", ruleresult);
+                }
+            }
+            else {
+                while (1) {
+                    printf("ë‹¹ì‹ ì˜ ì°¨ë¡€ì…ë‹ˆë‹¤. ë‘˜ columnì„ ê³ ë¥´ì„¸ìš”:(1-7)");
+                    scanf("%d", &playerchoice);
+                    getchar();
+                    playerchoice--;
+                    if (state[0][playerchoice] == 'X') {
+                        dummy = nextState(state, playerchoice, 'P');
+                        break;
+                    }
+                    printf("ë¶ˆê°€ëŠ¥í•œ ìˆ˜ì…ë‹ˆë‹¤. ë‹¤ì‹œ ê³¨ë¼ì£¼ì„¸ìš”.\n");
+                }
+                
+            }
+            
+            draw(state);
+            win = winCheck(state);
+            if (win == 1) {
+                printf("AI Mì´ ìŠ¹ë¦¬\n");
+                gameIsnotTerminal = 0;
+            }
+            else if (win == -1) {
+                printf("í”Œë ˆì´ì–´ Pê°€ ìŠ¹ë¦¬\n");
+                gameIsnotTerminal = 0;
+            }
+            turn++;
+            if (turn == 12) {
+                depth = 11;
+            }
+            else if (turn == 12) {
+                depth = 13;
+            }
+            else if (turn == 15) {
+                depth = 14;
+            }
+            else if (turn == 17) {
+                depth = 16;
+            }
+            else if (turn == 19) {
+                depth = 17;
+            }
+            else if (turn == 21) {
+                depth = 19;
+            }
+            else if (turn == 43) {
+                printf("ë¬´ìŠ¹ë¶€\n");
+                break;
+            }
+        }
+    }
+    else {
+        draw(state);
+        while (gameIsnotTerminal) {
+            printf("\n<<turn%d>>\n", turn);
+            if (turn % 2 == 0) {
+                printf("Searchë¡œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ Ruleë¡œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ? Searchë©´ 1, Ruleì´ë©´ 2 ì…ë ¥ ");     //ì´ ìë¦¬ì— Ruleì´ëƒ Searchëƒ ë¬»ëŠ” ì½”ë“œ ë„£ê¸°
+                scanf("%d", &mode);
+                getchar();
+                start = time(NULL);
+                
+                if (turn == 2) {
+                    end = time(NULL);
+                    interval = difftime(end, start);
+                    dummy = nextState(state, 3, 'M');
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    if (mode == 1)
+                        printf("Search mode: 4ë²ˆ columnì— ì°©ìˆ˜\n");
+                    else if (mode == 2)
+                        printf("Rule mode: 4ë²ˆ columnì— ì°©ìˆ˜\n");
+                    draw(state);
+                    turn++;
+                    
+                    
+                    continue;
+                }
+                
+                if (mode == 1) {  //Search ëª¨ë“œ
+                    appendNextNodes(childList, state, 'M');
+                    curnode = childList->firstnode;
+                    while (curnode != NULL) {
+                        //printf("%d\n", nodenum);
+                        //nodenum++;
+                        //if(!losingMove(curnode->stateboard))  //losing moveë©´ ì• ì´ˆì— í•¨ìˆ˜ë„ ì•ˆ í˜¸ì¶œí•˜ë„ë¡
+                        curnode->score = AlphaBeta(curnode->stateboard, depth, -1000000000, 1000000000, 'P');
+                        curnode = curnode->nextsearch;
+                    }
+                    curnode = childList->firstnode;
+                    maxscore = curnode->score;
+                    index = curnode->col;
+                    maxindex = index;
+                    while (curnode != NULL) { //col0~col6ê¹Œì§€ ìˆœì„œëŒ€ë¡œ appendí–ˆì—ˆìŒ.
+                        printf("%dë²ˆì§¸ colì— ë‘ë©´ ì ìˆ˜: %d\n", curnode->col + 1, curnode->score);
+                        if (curnode->score > maxscore) {
+                            maxindex = curnode->col;
+                            maxscore = curnode->score;
+                        }
+                        curnode = curnode->nextsearch;
+                        
+                    }
+                    end = time(NULL);
+                    dummy = nextState(state, maxindex, 'M');
+                    
+                    interval = difftime(end, start);
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    printf("Search mode: %dë²ˆ columnì— ì°©ìˆ˜\n", maxindex + 1);
+                    emptyList(childList);  //í˜„ì¬ì˜ ë°”ë¡œ ë‹¤ìŒ ìì‹ë“¤ì˜ ì ìˆ˜ë§¤ê¹€ì´ ëë‚˜ê³  ì„ íƒì„ ë§ˆì¹˜ë©´ childListë¥¼ ë¹„ì›Œë‚¸ë‹¤.
+                }
+                else if (mode == 2) {  //Rule ëª¨ë“œ
+                    int ruletworesult = Rule(state, turn, 'P');
+                    dummy = nextState(state, ruletworesult, 'M');
+                    printf("%fì´ˆ ê±¸ë¦¼\n", interval);
+                    printf("Rule mode: %dë²ˆ columnì— ì°©ìˆ˜\n", ruletworesult);
+                }
+            }
+            else {
+                while (1) {
+                    printf("ë‹¹ì‹ ì˜ ì°¨ë¡€ì…ë‹ˆë‹¤. ë‘˜ columnì„ ê³ ë¥´ì„¸ìš”:(1-7)");
+                    scanf("%d", &playerchoice);
+                    getchar();
+                    playerchoice--;
+                    if (state[0][playerchoice] == 'X') {
+                        dummy = nextState(state, playerchoice, 'P');
+                        break;
+                    }
+                    printf("ë¶ˆê°€ëŠ¥í•œ ìˆ˜ì…ë‹ˆë‹¤. ë‹¤ì‹œ ê³¨ë¼ì£¼ì„¸ìš”.\n");
+                }
+                
+            }
+            
+            draw(state);
+            win = winCheck(state);
+            if (win == 1) {
+                printf("AI Mì´ ìŠ¹ë¦¬\n");
+                gameIsnotTerminal = 0;
+            }
+            else if (win == -1) {
+                printf("í”Œë ˆì´ì–´ Pê°€ ìŠ¹ë¦¬\n");
+                gameIsnotTerminal = 0;
+            }
+            turn++;
+            if (turn == 12) {
+                depth = 11;
+            }
+            else if (turn == 12) {
+                depth = 13;
+            }
+            else if (turn == 15) {
+                depth = 14;
+            }
+            else if (turn == 17) {
+                depth = 16;
+            }
+            else if (turn == 19) {
+                depth = 17;
+            }
+            else if (turn == 21) {
+                depth = 19;
+            }
+            else if (turn == 43) {
+                printf("ë¬´ìŠ¹ë¶€\n");
+                break;
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    /*curnode = childList->firstnode;
+     while (curnode != NULL) {
+     printf("%d\n", curnode->score);
+     curnode = curnode->nextsearch;
+     }*/
+    
+    
+    //printf("%d", childList->firstnode->score);
+    
+    
+    getchar();
+    return 0;
 }
+
+
+
+
