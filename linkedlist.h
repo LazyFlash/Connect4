@@ -1,0 +1,30 @@
+#pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+//main에서 전역변수 state 하나를 계속 사용할 것. 탐색할 때는 state의 내용을 복사해서 복사본 사용. 수를 고르고 update할 때는 원본을 갱신해야 함.
+//만약 원본 갱신이 어렵다 싶으면 newstate를 return받아서 memcpy로 원본 state에 덮어주기.
+//main에서 바로 다음 자식리스트 노드들에 점수가 저장되면 또 반복문 돌면서 그 중 score 가장 높은 애를 bestnode에 저장하기
+typedef struct node {
+	char stateboard[6][7];
+	struct node* nextsearch;
+	int score;
+	int col;
+}Node;
+
+typedef struct list {
+	Node* firstnode;
+	Node* lastnode;
+}List;
+
+List* createList(void);
+void append(List*list, Node*node);
+void emptyList(List* list); //empty만 시키고 계속 울궈먹으면 됨
+int nextState(char state[6][7], int move, char player);//char nextstate[6][7], 
+void appendNextNodes(List* list, char state[6][7], char player);
+int AlphaBeta(char state[6][7], int depth, int Alpha, int Beta, char player);
+int Eval(char state[6][7]);
+void draw(char state[6][7]);
+int winCheck(char state[6][7]);
+int isFull(char state[6][7]);
