@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-//main¿¡¼­ Àü¿ªº¯¼ö state ÇÏ³ª¸¦ °è¼Ó »ç¿ëÇÒ °Í. Å½»öÇÒ ¶§´Â stateÀÇ ³»¿ëÀ» º¹»çÇØ¼­ º¹»çº» »ç¿ë. ¼ö¸¦ °í¸£°í updateÇÒ ¶§´Â ¿øº»À» °»½ÅÇØ¾ß ÇÔ.
-//¸¸¾à ¿øº» °»½ÅÀÌ ¾î·Æ´Ù ½ÍÀ¸¸é newstate¸¦ return¹Ş¾Æ¼­ memcpy·Î ¿øº» state¿¡ µ¤¾îÁÖ±â.
-//main¿¡¼­ ¹Ù·Î ´ÙÀ½ ÀÚ½Ä¸®½ºÆ® ³ëµåµé¿¡ Á¡¼ö°¡ ÀúÀåµÇ¸é ¶Ç ¹İº¹¹® µ¹¸é¼­ ±× Áß score °¡Àå ³ôÀº ¾Ö¸¦ bestnode¿¡ ÀúÀåÇÏ±â
+//mainì—ì„œ ì „ì—­ë³€ìˆ˜ state í•˜ë‚˜ë¥¼ ê³„ì† ì‚¬ìš©í•  ê²ƒ. íƒìƒ‰í•  ë•ŒëŠ” stateì˜ ë‚´ìš©ì„ ë³µì‚¬í•´ì„œ ë³µì‚¬ë³¸ ì‚¬ìš©. ìˆ˜ë¥¼ ê³ ë¥´ê³  updateí•  ë•ŒëŠ” ì›ë³¸ì„ ê°±ì‹ í•´ì•¼ í•¨.
+//ë§Œì•½ ì›ë³¸ ê°±ì‹ ì´ ì–´ë µë‹¤ ì‹¶ìœ¼ë©´ newstateë¥¼ returnë°›ì•„ì„œ memcpyë¡œ ì›ë³¸ stateì— ë®ì–´ì£¼ê¸°.
+//mainì—ì„œ ë°”ë¡œ ë‹¤ìŒ ìì‹ë¦¬ìŠ¤íŠ¸ ë…¸ë“œë“¤ì— ì ìˆ˜ê°€ ì €ì¥ë˜ë©´ ë˜ ë°˜ë³µë¬¸ ëŒë©´ì„œ ê·¸ ì¤‘ score ê°€ì¥ ë†’ì€ ì• ë¥¼ bestnodeì— ì €ì¥í•˜ê¸°
 typedef struct node {
 	char stateboard[6][7];
 	struct node* nextsearch;
@@ -20,7 +20,7 @@ typedef struct list {
 
 List* createList(void);
 void append(List*list, Node*node);
-void emptyList(List* list); //empty¸¸ ½ÃÅ°°í °è¼Ó ¿ï±Å¸ÔÀ¸¸é µÊ
+void emptyList(List* list); //emptyë§Œ ì‹œí‚¤ê³  ê³„ì† ìš¸ê¶ˆë¨¹ìœ¼ë©´ ë¨
 int nextState(char state[6][7], int move, char player);//char nextstate[6][7], 
 void appendNextNodes(List* list, char state[6][7], char player);
 int AlphaBeta(char state[6][7], int depth, int Alpha, int Beta, char player);
@@ -28,3 +28,5 @@ int Eval(char state[6][7]);
 void draw(char state[6][7]);
 int winCheck(char state[6][7]);
 int isFull(char state[6][7]);
+int checkMajor(char state[6][7], char player);			//boardì™€ player ì •ë³´ë¥¼ ë°›ì•„ì„œ í•´ë‹¹ í”Œë ˆì´ì–´ê°€ ê°–ê³  ìˆëŠ” major threat ê°œìˆ˜ë¥¼ ë°˜í™˜
+int checkMinor(char state[6][7], char player);			//minor threat check
