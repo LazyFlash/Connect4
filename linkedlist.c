@@ -430,3 +430,159 @@ int isFull(char state[6][7]) {
 		full = 0;
 	return full;
 }
+
+int checkMajor(char state[6][7], char player) {		//board state와 check하려는 player를 인자로 받음
+	int row, col;
+	int count = 0;
+	for (row = 5; row > -1; row--) {
+		for (col = 0; col < 4; col++) {
+			int temp = state[row][col] + state[row][col + 1] + state[row][col + 2] + state[row][col + 3];							//가로 major threat 체크
+			if (player == 'P') {					//player가 P일 경우
+				if (temp == 328) {					//PPPX의 ASCII값 합산은 328, 순서는 무관
+					count++;						//major threat count 증가
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 가로", row, col, row, col+1, row, col+2, row, col+3);						//디버깅용 구문
+				}
+			}
+			else {									//player가 M
+				if (temp == 319) {					//MMMX의 ASCII값 합산은 319, 역시 순서는 무관
+					count++;						//major threat count 증가
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 가로", row, col, row, col + 1, row, col + 2, row, col + 3);
+				}
+			}
+		}
+	}
+
+	for (col = 0; col < 7; col++) {
+		for (row = 5; row > 2; row--) {
+			int temp = state[row][col] + state[row - 1][col] + state[row - 2][col] + state[row - 3][col];							//세로 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 328) {					
+					count++;	
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 세로", row, col, row-1, col, row-2, col, row-3, col);
+				}
+			}
+			else {									//player가 M
+				if (temp == 319) {					
+					count++;			
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 세로", row, col, row - 1, col, row - 2, col, row - 3, col);
+				}
+			}
+		}
+	}
+
+	for (row = 5; row > 2; row--) {
+		for (col = 0; col < 4; col++) {
+			int temp = state[row][col] + state[row - 1][col + 1] + state[row - 2][col + 2] + state[row - 3][col + 3];				// 오른쪽 위를 향하는 대각선 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 328) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)로 이루어진 P 오위 대각선", row, col, row-1, col+1, row-2, col+2, row-3, col+3);
+				}
+			}
+			else {									//player가 M
+				if (temp == 319) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 오위 대각선", row, col, row - 1, col + 1, row - 2, col + 2, row - 3, col + 3);
+				}
+			}
+		}
+	}
+
+	for (row = 5; row > 2; row--) {
+		for (col = 3; col < 7; col++) {
+			int temp = state[row][col] + state[row - 1][col - 1] + state[row - 2][col - 2] + state[row - 3][col - 3];				// 왼쪽 위를 향하는 대각선 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 328) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 왼위 대각선", row, col, row - 1, col - 1, row - 2, col - 2, row - 3, col - 3);
+				}
+			}
+			else {									//player가 M
+				if (temp == 319) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 왼위 대각선", row, col, row - 1, col - 1, row - 2, col - 2, row - 3, col - 3);
+				}
+			}
+		}
+	}
+
+	return count;
+}
+
+int checkMinor(char state[6][7], char player) {		//minor threat을 체크하는 함수
+	int row, col;
+	int count = 0;
+	for (row = 5; row > -1; row--) {
+		for (col = 0; col < 4; col++) {
+			int temp = state[row][col] + state[row][col + 1] + state[row][col + 2] + state[row][col + 3];							//가로 체크
+			if (player == 'P') {					//player가 P일 경우
+				if (temp == 336) {					//PPXX의 ASCII값 합산은 336, 순서는 무관
+					count++;						//minor threat count 증가
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 가로", row, col, row, col + 1, row, col + 2, row, col + 3);				//디버깅용
+				}
+			}
+			else {									//player가 M
+				if (temp == 330) {					//MMXX의 ASCII값 합산은 330, 역시 순서는 무관
+					count++;						//minor threat count 증가
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 가로", row, col, row, col + 1, row, col + 2, row, col + 3);
+				}
+			}
+		}
+	}
+
+	for (col = 0; col < 7; col++) {
+		for (row = 5; row > 2; row--) {
+			int temp = state[row][col] + state[row - 1][col] + state[row - 2][col] + state[row - 3][col];							//세로 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 336) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 세로", row, col, row - 1, col, row - 2, col, row - 3, col);
+				}
+			}
+			else {									//player가 M
+				if (temp == 330) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 세로", row, col, row - 1, col, row - 2, col, row - 3, col);
+				}
+			}
+		}
+	}
+
+	for (row = 5; row > 2; row--) {
+		for (col = 0; col < 4; col++) {
+			int temp = state[row][col] + state[row - 1][col + 1] + state[row - 2][col + 2] + state[row - 3][col + 3];				// 오른쪽 위를 향하는 대각선 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 336) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)로 이루어진 P 오위 대각선", row, col, row - 1, col + 1, row - 2, col + 2, row - 3, col + 3);
+				}
+			}
+			else {									//player가 M
+				if (temp == 330) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 오위 대각선", row, col, row - 1, col + 1, row - 2, col + 2, row - 3, col + 3);
+				}
+			}
+		}
+	}
+
+	for (row = 5; row > 2; row--) {
+		for (col = 3; col < 7; col++) {
+			int temp = state[row][col] + state[row - 1][col - 1] + state[row - 2][col - 2] + state[row - 3][col - 3];				// 왼쪽 위를 향하는 대각선 체크
+			if (player == 'P') {					//player가 P
+				if (temp == 336) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 P 왼위 대각선", row, col, row - 1, col - 1, row - 2, col - 2, row - 3, col - 3);
+				}
+			}
+			else {									//player가 M
+				if (temp == 330) {
+					count++;
+					//printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 왼위 대각선", row, col, row - 1, col - 1, row - 2, col - 2, row - 3, col - 3);
+				}
+			}
+		}
+	}
+
+	return count;
+}
