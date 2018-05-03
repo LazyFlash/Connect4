@@ -76,8 +76,10 @@ int main(void) {
             if (turn % 2 == 1) {   //AI의 차례
                 printf("Search로 하시겠습니까 Rule로 하시겠습니까? Search면 1, Rule이면 2 입력 ");     //이 자리에 Rule이냐 Search냐 묻는 코드 넣기
                 scanf("%d", &mode);
-                getchar();    //turn==1일 때는 공통 코드 쓰기. if(turn==1){} 이하로 if(Rule){} 넣기
+                getchar();
                 start = time(NULL);
+                
+                //turn==1일 때는 공통 코드 쓰기.
                 if (turn == 1) {
                     end = time(NULL);
                     interval = difftime(end, start);
@@ -126,11 +128,10 @@ int main(void) {
                     emptyList(childList);
                 }
                 else if (mode == 2) {  //Rule 모드
-                    
                     int ruleresult = Rule(state, turn, 'M');
                     dummy = nextState(state, ruleresult, 'M');
                     printf("%f초 걸림\n", interval);
-                    printf("Rule mode: %d번 column에 착수\n", ruleresult);
+                    printf("Rule mode: %d번 column에 착수\n", ruleresult+1);
                 }
             }
             else {
@@ -244,7 +245,7 @@ int main(void) {
                     int ruletworesult = Rule(state, turn, 'P');
                     dummy = nextState(state, ruletworesult, 'M');
                     printf("%f초 걸림\n", interval);
-                    printf("Rule mode: %d번 column에 착수\n", ruletworesult);
+                    printf("Rule mode: %d번 column에 착수\n", ruletworesult+1);
                 }
             }
             else {

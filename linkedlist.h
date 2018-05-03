@@ -38,8 +38,8 @@ int isFull(char state[6][7]);
 
 // Rule 함수
 int Rule(char state[6][7], int turn, char player);
-bool checkfour(char state[6][7]);
-bool checkthree(char state[6][7]);
+bool checkfour(char state[6][7], char player);
+bool checkthree(char state[6][7], char player);
 int RuleOne(char state[6][7]);
 int RuleTwo(char state[6][7]);
 int RuleThree(char state[6][7]);
@@ -47,7 +47,7 @@ int RuleFour(char state[6][7]);
 int RuleFive(char state[6][7]);
 int RuleJ(char state[6][7]);
 int RuleNine(char state[6][7]);
-
+int RuleTen(char state[6][7]);
 int checkMajor(char state[6][7], char player);            //board와 player 정보를 받아서 해당 플레이어가 갖고 있는 major threat 개수를 반환
 int checkMinor(char state[6][7], char player);            //minor threat check
 
