@@ -802,6 +802,8 @@ int ruleFour(char state[6][7]){
     int row = -1;
     
     for(int i = 1; i < 6; i++){
+	if (state[0][i] == 'X')
+		continue;
         row = nextState(state, i, 'M');
         
         if(checkthree(state, row, 'M')) {
@@ -822,6 +824,8 @@ int ruleFive(char state[6][7]){
     int row = -1;
     
     for(int i = 1; i < 6; i++){
+    	if (state[0][i] == 'X')
+		continue;
         row = nextState(state, i, 'P');
         
         if(checkthree(state, row, 'P')) {
@@ -907,7 +911,7 @@ int ruleSeven(char state[6][7], char player) {
     int col = -1;
     int diff = 0;
     for (int i = 0; i < 7; i++) {
-        if (state[0][col] == 'X')
+        if (state[0][i] == 'X')
             continue;
         
         before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
@@ -922,7 +926,7 @@ int ruleSeven(char state[6][7], char player) {
     if (col == -1) {                                //major threat을 증가시킬 column이 없다면 minor threat을 체크
         diff = 0;
         for (int i = 0; i < 7; i++) {
-            if (state[0][col] == 'X')
+            if (state[0][i] == 'X')
                 continue;
             
             before = checkMinor(state, player);
