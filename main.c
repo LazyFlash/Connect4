@@ -128,7 +128,7 @@ int main(void) {
                     emptyList(childList);
                 }
                 else if (mode == 2) {  //Rule 모드
-                    int ruleresult = Rule(state, turn, 'M');
+                    int ruleresult = rule(state, turn, 'M');
                     dummy = nextState(state, ruleresult, 'M');
                     printf("%f초 걸림\n", interval);
                     printf("Rule mode: %d번 column에 착수\n", ruleresult+1);
@@ -242,7 +242,7 @@ int main(void) {
                     emptyList(childList);  //현재의 바로 다음 자식들의 점수매김이 끝나고 선택을 마치면 childList를 비워낸다.
                 }
                 else if (mode == 2) {  //Rule 모드
-                    int ruletworesult = Rule(state, turn, 'P');
+                    int ruletworesult = rule(state, turn, 'P');
                     dummy = nextState(state, ruletworesult, 'M');
                     printf("%f초 걸림\n", interval);
                     printf("Rule mode: %d번 column에 착수\n", ruletworesult+1);
