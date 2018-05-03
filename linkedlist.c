@@ -635,7 +635,7 @@ bool checkfour(char state[6][7], char player){
 }
 
 
-bool checkthree(char state[6][7], int row, int col, char player){
+bool checkthree(char state[6][7], int row, char player){
     int i,j;
     
     // ㅡ O O O ㅡ
@@ -650,7 +650,7 @@ bool checkthree(char state[6][7], int row, int col, char player){
     if(state[4][0] == 'X' && state[0][4] == 'X'
        && state[3][1] == player && state[2][2] == player && state[1][3] == player)
         return true;
-
+    
     // / 2
     if(state[5][0] == 'X' && state[1][4] == 'X'
        && state[4][1] == player && state[3][2] == player && state[2][3] == player)
@@ -660,7 +660,7 @@ bool checkthree(char state[6][7], int row, int col, char player){
     if(state[4][1] == 'X' && state[0][5] == 'X'
        && state[3][2] == player && state[2][3] == player && state[1][4] == player)
         return true;
-
+    
     // / 4
     if(state[5][1] == 'X' && state[1][5] == 'X'
        && state[4][2] == player && state[3][3] == player && state[2][4] == player)
@@ -680,7 +680,7 @@ bool checkthree(char state[6][7], int row, int col, char player){
     if(state[1][0] == 'X' && state[5][4] == 'X'
        && state[2][1] == player && state[3][2] == player && state[4][3] == player)
         return true;
- 
+    
     // \ 2
     if(state[0][0] == 'X' && state[4][4] == 'X'
        && state[1][1] == player && state[2][2] == player && state[3][3] == player)
@@ -706,7 +706,7 @@ bool checkthree(char state[6][7], int row, int col, char player){
        && state[1][3] == player && state[2][4] == player && state[3][5] == player)
         return true;
     
-
+    
     return false;
 }
 
@@ -800,8 +800,8 @@ int ruleFour(char state[6][7]){
     
     for(int i = 1; i < 6; i++){
         row = nextState(state, i, 'M');
-
-        if(checkthree(state, row, i, 'M')) {
+        
+        if(checkthree(state, row, 'M')) {
             state[row][i] = 'X';
             col = i; break;
         }
@@ -821,7 +821,7 @@ int ruleFive(char state[6][7]){
     for(int i = 1; i < 6; i++){
         row = nextState(state, i, 'P');
         
-        if(checkthree(state, row, i, 'P')) {
+        if(checkthree(state, row, 'P')) {
             state[row][i] = 'X';
             col = i; break;
         }
@@ -893,7 +893,7 @@ int ruleJ(char state[6][7]){
     return col;
 }
 
-int ruleSeven(char state[6][7], int turn) {
+int ruleSeven(char state[6][7], char player) {
     int row;
     int before, after;
     int col = -1;
@@ -1125,3 +1125,4 @@ int checkMinor(char state[6][7], char player) {        //minor threat을 체크�
     
     return count;
 }
+
