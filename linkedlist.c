@@ -569,7 +569,7 @@ int rule(char state[6][7], int turn, char player){
      7, 8번 rule에 대하여, odd/even threat는 Heuristic에서 설명한 바와 같습니다.
      7) 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고, 비어 있는 칸이 odd(even) threat인 경우 둔다.
      */
-    col = ruleSeven(state, turn);
+    col = ruleSeven(state, 'M');
     if (col > -1 && col != dont && col != not_recommanded) {
         printf("rule 7) 내가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
         return col;
@@ -578,7 +578,11 @@ int rule(char state[6][7], int turn, char player){
     
     
     //8) 상대방이 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고 비어 있는 칸이 odd(even) threat인 경우 막는다.
-    //보류
+    col = ruleSeven(state, 'P');
+	if (col > -1 && col != dont && col != not_recommanded) {
+		printf("rule 8) 상대가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
+		return col;
+	}
     
 
     // 9) 가운데 칼럼의 높이가 4이하인 경우, 가운데에 둔다.
@@ -878,15 +882,15 @@ int ruleJ(char state[6][7]){
     return col;
 }
 
-int ruleSeven(char state[6][7], int turn) {
+int ruleSeven(char state[6][7], char player) {
     int row;
     int before, after;
     int col = -1;
     int diff = 0;
     for (int i = 0; i < 7; i++) {
-        before = checkMajor(state, 'M');            //i column에 돌을 두기 전의 major threat 개수
-        row = nextState(state, i, 'M');
-        after = checkMajor(state, 'M');                //i column에 돌을 둔 후의 major threat 개수
+        before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
+        row = nextState(state, i, player);
+        after = checkMajor(state, player);                //i column에 돌을 둔 후의 major threat 개수
         if (diff < (after - before)) {                //major threat의 증감량이 이전 column보다 크다면 col을 갱신
             diff = after - before;
             col = i;
@@ -896,9 +900,9 @@ int ruleSeven(char state[6][7], int turn) {
     if (col == -1) {                                //major threat을 증가시킬 column이 없다면 minor threat을 체크
         diff = 0;
         for (int i = 0; i < 7; i++) {
-            before = checkMinor(state, 'M');
-            row = nextState(state, i, 'M');
-            after = checkMinor(state, 'M');
+            before = checkMinor(state, player);
+            row = nextState(state, i, player);
+            after = checkMinor(state, player);
             if (diff < (after - before)) {
                 diff = after - before;
                 col = i;
