@@ -846,12 +846,12 @@ int ruleJ(char state[6][7]){
     for (int i = 0; i < 4; i++) {                // find J configuration - 1
         for (int j = 5; j > 2; j--) {            // 다음턴에 J가 완성되려면 윗 부분 중에 한 곳은 X, 한 곳은 M이어야 한다
             if (state[j][i] == 'M' && state[j - 1][i + 1] == 'M' && (state[j - 2][i + 1] + state[j - 2][i]) == 165 ) {
-                if (state[j-2][i+2] == 'X' && state[j-2][i+3] == 'X' & state[j-3][i+3] == 'X') {            //minor threat이 나타날 곳이 빈칸이어야 쓸모가 있다
+                if (state[j-2][i+2] == 'X' && state[j-2][i+3] == 'X' && state[j-3][i+3] == 'X') {            //minor threat이 나타날 곳이 빈칸이어야 쓸모가 있다
                     if (state[j - 2][i + 1] == 'M') {
-                        col = i + 1;
+                        col = i;
                     }
                     else {
-                        col = i;
+                        col = i + 1;
                     }
                 }
             }
@@ -860,12 +860,12 @@ int ruleJ(char state[6][7]){
     for (int i = 6; i > 2; i--) {                // find reverse J configuration
         for (int j = 5; j > 2; j--) {
             if (state[j][i] == 'M' && state[j - 1][i - 1] == 'M' && (state[j - 2][i - 1] + state[j - 2][i]) == 165) {
-                if (state[j - 2][i - 2] == 'X' && state[j - 2][i - 3] == 'X' & state[j - 3][i - 3] == 'X') {
+                if (state[j - 2][i - 2] == 'X' && state[j - 2][i - 3] == 'X' && state[j - 3][i - 3] == 'X') {
                     if (state[j - 2][i - 1] == 'M') {
-                        col = i + 1;
+                        col = i;
                     }
                     else {
-                        col = i;
+                        col = i - 1;
                     }
                 }
             }
