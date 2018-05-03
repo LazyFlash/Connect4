@@ -871,6 +871,10 @@ int ruleJ(char state[6][7]){
             }
         }
     }
+    
+    //다 채워진 col을 선택할 수 없음.
+    if(state[0][col] != 'X') col = -1;
+    
     return col;
 }
 
@@ -899,6 +903,7 @@ int ruleSeven(char state[6][7], int turn) {
                 diff = after - before;
                 col = i;
             }
+            state[row][i] = 'X';
         }
     }
     return col;
@@ -963,7 +968,7 @@ int checkMajor(char state[6][7], char player) {        //board state와 check하
             else {                                    //player가 M
                 if (temp == 319) {                    //MMMX의 ASCII값 합산은 319, 역시 순서는 무관
                     count++;                        //major threat count 증가
-                    //printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 시작하는 M 가로", row, col, row, col + 1, row, col + 2, row, col + 3);
+                    //printf("\n(%d, %d) + (%d, %d) + (%d, %d) + (%d, %d)에서 ===시작하는 M 가로", row, col, row, col + 1, row, col + 2, row, col + 3);
                 }
             }
         }
@@ -1103,6 +1108,3 @@ int checkMinor(char state[6][7], char player) {        //minor threat을 체크�
     
     return count;
 }
-
-
-
