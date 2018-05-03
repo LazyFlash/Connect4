@@ -11,15 +11,15 @@
 typedef int bool;
 
 typedef struct node {
-	char stateboard[6][7];
-	struct node* nextsearch;
-	int score;
-	int col;
+    char stateboard[6][7];
+    struct node* nextsearch;
+    int score;
+    int col;
 }Node;
 
 typedef struct list {
-	Node* firstnode;
-	Node* lastnode;
+    Node* firstnode;
+    Node* lastnode;
 }List;
 
 List* createList(void);
@@ -39,7 +39,7 @@ bool checkfour(char state[6][7], char player);
 bool checkthree(char state[6][7], int row, char player);
 int ruleOne(char state[6][7]);
 int ruleTwo(char state[6][7]);
-int ruleThree(char state[6][7]);
+// int ruleThree(char state[6][7]);
 int ruleFour(char state[6][7]);
 int ruleFive(char state[6][7]);
 int ruleJ(char state[6][7]);
