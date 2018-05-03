@@ -818,7 +818,7 @@ int ruleFour(char state[6][7]){
     int row = -1;
     
     for(int i = 1; i < 6; i++){
-	if (state[0][i] == 'X')
+	if (state[0][i] != 'X')
 		continue;
         row = nextState(state, i, 'M');
         
@@ -840,7 +840,7 @@ int ruleFive(char state[6][7]){
     int row = -1;
     
     for(int i = 1; i < 6; i++){
-    	if (state[0][i] == 'X')
+    	if (state[0][i] != 'X')
 		continue;
         row = nextState(state, i, 'P');
         
@@ -867,7 +867,7 @@ int ruleSix(char state[6][7]) {
     int before, after;
     int not = -1;
     for (int i = 0; i < 7; i++) {
-        if (state[0][i] == 'X' && state[1][i])
+        if (state[0][i] != 'X' && state[1][i] != 'X')
 			continue;
         
         before = checkMajor(state, 'M');
@@ -888,7 +888,7 @@ int ruleJ(char state[6][7]){
     int col = -1;
     for (int i = 0; i < 4; i++) {                // find J configuration - 1
         for (int j = 5; j > 2; j--) {            // 다음턴에 J가 완성되려면 윗 부분 중에 한 곳은 X, 한 곳은 M이어야 한다
-            if (state[j][i] == 'M' && state[j - 1][i + 1] == 'M' && (state[j - 2][i + 1] + state[j - 2][i]) == 165 ) {
+            if (state[j][i] == 'M' && state[j - 1][i + 1] == 'M' && state[j-1][i] != 'X' && (state[j - 2][i + 1] + state[j - 2][i]) == 165 ) {
                 if (state[j-2][i+2] == 'X' && state[j-2][i+3] == 'X' && state[j-3][i+3] == 'X') {            //minor threat이 나타날 곳이 빈칸이어야 쓸모가 있다
                     if (state[j - 2][i + 1] == 'M') {
                         col = i;
@@ -902,7 +902,7 @@ int ruleJ(char state[6][7]){
     }
     for (int i = 6; i > 2; i--) {                // find reverse J configuration
         for (int j = 5; j > 2; j--) {
-            if (state[j][i] == 'M' && state[j - 1][i - 1] == 'M' && (state[j - 2][i - 1] + state[j - 2][i]) == 165) {
+            if (state[j][i] == 'M' && state[j - 1][i - 1] == 'M' && state[j-1][i] != 'X' && (state[j - 2][i - 1] + state[j - 2][i]) == 165) {
                 if (state[j - 2][i - 2] == 'X' && state[j - 2][i - 3] == 'X' && state[j - 3][i - 3] == 'X') {
                     if (state[j - 2][i - 1] == 'M') {
                         col = i;
@@ -927,7 +927,7 @@ int ruleSeven(char state[6][7], char player) {
     int col = -1;
     int diff = 0;
     for (int i = 0; i < 7; i++) {
-        if (state[0][i] == 'X')
+        if (state[0][i] != 'X')
             continue;
         
         before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
@@ -942,7 +942,7 @@ int ruleSeven(char state[6][7], char player) {
     if (col == -1) {                                //major threat을 증가시킬 column이 없다면 minor threat을 체크
         diff = 0;
         for (int i = 0; i < 7; i++) {
-            if (state[0][i] == 'X')
+            if (state[0][i] != 'X')
                 continue;
             
             before = checkMinor(state, player);
