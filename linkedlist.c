@@ -549,7 +549,7 @@ int rule(char state[6][7], int turn, char player){
         return col;
     }
     
-  
+    
     // J config을 확인
     col = ruleJ(state);
     if (col > -1 && col != dont) {
@@ -561,7 +561,7 @@ int rule(char state[6][7], int turn, char player){
     //6) 자신의 major threat 보존헤
     //두면 다음 턴에 상대가 나의 3 in a row를 막는 경우, 먼저 두지 않게 약하게 금지한다. 되도록 두지 않되, 둘 수 있는 것이 그것만 남는 경우 둔다.)
     not_recommanded = ruleSix(state);
-
+    
     
     /*
      + 상대방 major threat 막는 것 추가
@@ -569,7 +569,7 @@ int rule(char state[6][7], int turn, char player){
      7, 8번 rule에 대하여, odd/even threat는 Heuristic에서 설명한 바와 같습니다.
      7) 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고, 비어 있는 칸이 odd(even) threat인 경우 둔다.
      */
-    col = ruleSeven(state, 'M');
+    col = ruleSeven(state, turn);
     if (col > -1 && col != dont && col != not_recommanded) {
         printf("rule 7) 내가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
         return col;
@@ -578,13 +578,9 @@ int rule(char state[6][7], int turn, char player){
     
     
     //8) 상대방이 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고 비어 있는 칸이 odd(even) threat인 경우 막는다.
-    col = ruleSeven(state, 'P');
-	if (col > -1 && col != dont && col != not_recommanded) {
-		printf("rule 8) 상대가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
-		return col;
-	}
+    //보류
     
-
+    
     // 9) 가운데 칼럼의 높이가 4이하인 경우, 가운데에 둔다.
     col = ruleNine(state);
     if(col > -1 && col != dont){
@@ -595,7 +591,7 @@ int rule(char state[6][7], int turn, char player){
     // 10) 이후로는 Search에서 사용한 evaluation function에 맡기기로 한다.
     col = ruleTen(state);
     printf("rule 10) 이후로는 Search에서 사용한 evaluation function에 맡기기로 한다\n");
-
+    
     return col;
 }
 
@@ -639,45 +635,78 @@ bool checkfour(char state[6][7], char player){
 }
 
 
-bool checkthree(char state[6][7], char player){
+bool checkthree(char state[6][7], int row, int col, char player){
     int i,j;
     
-    //    양 옆 비는 게 세로로는 불가능
-    //    for(i=0;i<=2;i++){
-    //        for(j=0;j<=6;j++){
-    //            if(state[i][j] =='X'){
-    //                if(state[i][j]==state[i+1][j]&&state[i][j]==state[i+2][j]&&state[i][j]==state[i+3][j]) return true;
-    //            }
-    //        }
-    //    }
-    
-    // ㅡ
-     for(i=5;i>-1;i--){
-        for(j=0;j<=2;j++){
-            if(state[i][j] == 'X' && state[i][j+4] == 'X' && state[i][j+1] == player){
-                if(state[i][j+1]==state[i][j+2]&&state[i][j+1]==state[i][j+3]) return true;
-            }
+    // ㅡ O O O ㅡ
+    for(j=0; j<=2; j++){
+        if(state[row][j] == 'X' && state[row][j+4] == 'X'){
+            if(state[row][j+1] == player && state[row][j+1] == state[row][j+2] && state[row][j+1] == state[row][j+3])
+                return true;
         }
     }
     
-    // \ 체크
-    for(i=0;i<=2;i++){
-        for(j=0;j<=2;j++){
-            if(state[i][j] =='X' && state[i+4][j+4] == 'X' && state[i+1][j+1] == player){
-                if(state[i+1][j+1]==state[i+2][j+2]&&state[i+1][j+1]==state[i+3][j+3]) return true;
-            }
-        }
-    }
+    // / 1
+    if(state[4][0] == 'X' && state[0][4] == 'X'
+       && state[3][1] == player && state[2][2] == player && state[1][3] == player)
+        return true;
+
+    // / 2
+    if(state[5][0] == 'X' && state[1][4] == 'X'
+       && state[4][1] == player && state[3][2] == player && state[2][3] == player)
+        return true;
     
-    // /
-    for(i=0;i<=2;i++){
-        for(j=4;j<=6;j++){
-            if(state[i][j] =='X' && state[i+4][j-4] == 'X' && state[i+1][j-1] == player){
-                if(state[i+1][j-1]==state[i+2][j-2]&&state[i+1][j-1]==state[i+3][j-3]) return true;
-            }
-        }
-    }
+    // / 3
+    if(state[4][1] == 'X' && state[0][5] == 'X'
+       && state[3][2] == player && state[2][3] == player && state[1][4] == player)
+        return true;
+
+    // / 4
+    if(state[5][1] == 'X' && state[1][5] == 'X'
+       && state[4][2] == player && state[3][3] == player && state[2][4] == player)
+        return true;
     
+    // / 5
+    if(state[4][2] == 'X' && state[0][6] == 'X'
+       && state[3][3] == player && state[2][4] == player && state[1][5] == player)
+        return true;
+    
+    // / 6
+    if(state[5][2] == 'X' && state[1][6] == 'X'
+       && state[4][3] == player && state[3][4] == player && state[2][5] == player)
+        return true;
+    
+    // \ 1
+    if(state[1][0] == 'X' && state[5][4] == 'X'
+       && state[2][1] == player && state[3][2] == player && state[4][3] == player)
+        return true;
+ 
+    // \ 2
+    if(state[0][0] == 'X' && state[4][4] == 'X'
+       && state[1][1] == player && state[2][2] == player && state[3][3] == player)
+        return true;
+    
+    // \ 3
+    if(state[1][1] == 'X' && state[5][5] == 'X'
+       && state[2][2] == player && state[3][3] == player && state[4][4] == player)
+        return true;
+    
+    // \ 4
+    if(state[0][1] == 'X' && state[4][5] == 'X'
+       && state[1][2] == player && state[2][3] == player && state[3][4] == player)
+        return true;
+    
+    // \ 5
+    if(state[1][2] == 'X' && state[5][5] == 'X'
+       && state[4][5] == player && state[2][3] == player && state[3][4] == player)
+        return true;
+    
+    // \ 6
+    if(state[0][2] == 'X' && state[4][6] == 'X'
+       && state[1][3] == player && state[2][4] == player && state[3][5] == player)
+        return true;
+    
+
     return false;
 }
 
@@ -767,55 +796,37 @@ int ruleThree(char state[6][7]){
 
 int ruleFour(char state[6][7]){
     int col = -1;
+    int row = -1;
     
-    for(int i = 0; i < 7; i++){
-        int y = 5;
-        
-        //Find top
-        for(int j = 0; j < 6; j++){
-            if(state[j][i] != 'X') {
-                y = j - 1; break;
-            }
-        }
-        if( y == -1 ) continue;
-        
-        //Check
-        state[y][i] = 'M';
-        if(checkthree(state, 'M')) {
-            state[y][i] = 'X';
+    for(int i = 1; i < 6; i++){
+        row = nextState(state, i, 'M');
+
+        if(checkthree(state, row, i, 'M')) {
+            state[row][i] = 'X';
             col = i; break;
         }
         else{
-            state[y][i] = 'X';
+            state[row][i] = 'X';
         }
         
     }
     return col;
 }
 
+
 int ruleFive(char state[6][7]){
     int col = -1;
+    int row = -1;
     
-    for(int i = 0; i < 7; i++){
-        int y = 5;
+    for(int i = 1; i < 6; i++){
+        row = nextState(state, i, 'P');
         
-        //Find top
-        for(int j = 0; j < 6; j++){
-            if(state[j][i] != 'X') {
-                y = j - 1; break;
-            }
-        }
-        if( y == -1 ) continue;
-        
-        
-        //Check
-        state[y][i] = 'P';
-        if(checkthree(state, 'P')) {
-            state[y][i] = 'X';
+        if(checkthree(state, row, i, 'P')) {
+            state[row][i] = 'X';
             col = i; break;
         }
         else{
-            state[y][i] = 'X';
+            state[row][i] = 'X';
         }
         
     }
@@ -831,16 +842,9 @@ int ruleSix(char state[6][7]) {
     int before, after;
     int not = -1;
     for (int i = 0; i < 7; i++) {
-	if (state[0][col] != 'X')
-		continue;
-        
-	before = checkMajor(state, 'M');
+        before = checkMajor(state, 'M');
         row1 = nextState(state, i, 'M');
-	
-	if (state[0][col] != 'X')
-		continue;
-        
-	row2 = nextState(state, i, 'P');
+        row2 = nextState(state, i, 'P');
         after = checkMajor(state, 'M');
         if (before < after) {
             not = i;
@@ -857,12 +861,12 @@ int ruleJ(char state[6][7]){
     for (int i = 0; i < 4; i++) {                // find J configuration - 1
         for (int j = 5; j > 2; j--) {            // 다음턴에 J가 완성되려면 윗 부분 중에 한 곳은 X, 한 곳은 M이어야 한다
             if (state[j][i] == 'M' && state[j - 1][i + 1] == 'M' && (state[j - 2][i + 1] + state[j - 2][i]) == 165 ) {
-                if (state[j-2][i+2] == 'X' && state[j-2][i+3] == 'X' && state[j-3][i+3] == 'X') {            //minor threat이 나타날 곳이 빈칸이어야 쓸모가 있다
+                if (state[j-2][i+2] == 'X' && state[j-2][i+3] == 'X' & state[j-3][i+3] == 'X') {            //minor threat이 나타날 곳이 빈칸이어야 쓸모가 있다
                     if (state[j - 2][i + 1] == 'M') {
-                        col = i;
+                        col = i + 1;
                     }
                     else {
-                        col = i + 1;
+                        col = i;
                     }
                 }
             }
@@ -871,12 +875,12 @@ int ruleJ(char state[6][7]){
     for (int i = 6; i > 2; i--) {                // find reverse J configuration
         for (int j = 5; j > 2; j--) {
             if (state[j][i] == 'M' && state[j - 1][i - 1] == 'M' && (state[j - 2][i - 1] + state[j - 2][i]) == 165) {
-                if (state[j - 2][i - 2] == 'X' && state[j - 2][i - 3] == 'X' && state[j - 3][i - 3] == 'X') {
+                if (state[j - 2][i - 2] == 'X' && state[j - 2][i - 3] == 'X' & state[j - 3][i - 3] == 'X') {
                     if (state[j - 2][i - 1] == 'M') {
-                        col = i;
+                        col = i + 1;
                     }
                     else {
-                        col = i - 1;
+                        col = i;
                     }
                 }
             }
@@ -889,18 +893,15 @@ int ruleJ(char state[6][7]){
     return col;
 }
 
-int ruleSeven(char state[6][7], char player) {
+int ruleSeven(char state[6][7], int turn) {
     int row;
     int before, after;
     int col = -1;
     int diff = 0;
     for (int i = 0; i < 7; i++) {
-	if (state[0][col] != 'X')
-		continue;
-	    
-        before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
-        row = nextState(state, i, player);
-        after = checkMajor(state, player);                //i column에 돌을 둔 후의 major threat 개수
+        before = checkMajor(state, 'M');            //i column에 돌을 두기 전의 major threat 개수
+        row = nextState(state, i, 'M');
+        after = checkMajor(state, 'M');                //i column에 돌을 둔 후의 major threat 개수
         if (diff < (after - before)) {                //major threat의 증감량이 이전 column보다 크다면 col을 갱신
             diff = after - before;
             col = i;
@@ -910,9 +911,9 @@ int ruleSeven(char state[6][7], char player) {
     if (col == -1) {                                //major threat을 증가시킬 column이 없다면 minor threat을 체크
         diff = 0;
         for (int i = 0; i < 7; i++) {
-            before = checkMinor(state, player);
-            row = nextState(state, i, player);
-            after = checkMinor(state, player);
+            before = checkMinor(state, 'M');
+            row = nextState(state, i, 'M');
+            after = checkMinor(state, 'M');
             if (diff < (after - before)) {
                 diff = after - before;
                 col = i;
@@ -932,15 +933,17 @@ int ruleNine(char state[6][7]){
         }
     }
     
-    if( y == 5 || y == 4 || y == 3 || y == 2) col = 3;
+    if( y == 5 || y == 4 || y == 3 || y == 2) {
+        col = 3;
+    }
     
     return col;
 }
 
 int ruleTen(char state[6][7]){
     int col = -1;
-    int maxEval = -10000;
-
+    int maxEval = -100000;
+    
     for(int i = 0; i < 7; i++){
         int y = 5;
         
