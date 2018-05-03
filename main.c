@@ -253,7 +253,7 @@ int main(void) {
                     printf("당신의 차례입니다. 둘 column을 고르세요:(1-7)");
                     scanf("%d", &playerchoice);
                     getchar();
-                    playerchoice--;
+                    playerchoice—;
                     if (state[0][playerchoice] == 'X') {
                         dummy = nextState(state, playerchoice, 'P');
                         break;
@@ -316,7 +316,3 @@ int main(void) {
     getchar();
     return 0;
 }
-
-
-
-
