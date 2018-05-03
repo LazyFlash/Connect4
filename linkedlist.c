@@ -505,12 +505,22 @@ int isFull(char state[6][7]) {
 
 
 /* rule 함수 시작 */
-
+/* rule 함수 시작 */
 int rule(char state[6][7], int turn, char player){
     int col = -1;
     int dont = -1;
     int not_recommanded = -1;
     
+    
+    //현재 state에서 착수 전에 col 검사
+    bool possible[7];
+    for (int i = 0; i < 7; i++) {
+        if (state[0][i] == 'X')
+            possible[i] = true;
+        else
+            possible[i] = false;
+    }
+
     //M이 먼저
     if(player == 'M' && turn == 3){
         if(state[0][3] == 'X') return 3;
@@ -520,14 +530,14 @@ int rule(char state[6][7], int turn, char player){
     
     // 1) 내 돌이 세 개 이어져 있으면 둔다.
     col = ruleOne(state);
-    if(col > -1) {
+    if(col > -1 && possible[col]) {
         printf("rule 1) 내 돌이 세 개 이어져 있으면 둔다. \n");
         return col;
     }
     
     // 2) 상대방 돌이 세 개 이어져 있으면 막는다.
     col = ruleTwo(state);
-    if(col > -1) {
+    if(col > -1 && possible[col]) {
         printf("rule 2) 상대방 돌이 세 개 이어져 있으면 막는다.\n");
         return col;
     }
@@ -537,14 +547,14 @@ int rule(char state[6][7], int turn, char player){
     
     // 4) 내 돌을 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 둔다.
     col = ruleFour(state);
-    if(col > -1 && col != dont){
+    if(col > -1 && col != dont && possible[col]) {
         printf("rule 4) 내 돌을 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 둔다.\n");
         return col;
     }
     
     // 5) 상대방이 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 막는다.
     col = ruleFive(state);
-    if(col > -1 && col != dont){
+    if(col > -1 && col != dont && possible[col]) {
         printf("rule 5) 상대방이 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 막는다.\n");
         return col;
     }
@@ -552,7 +562,7 @@ int rule(char state[6][7], int turn, char player){
     
     // J config을 확인
     col = ruleJ(state);
-    if (col > -1 && col != dont) {
+    if (col > -1 && col != dont && possible[col]) {
         printf("make J configuration\n");
         return col;
     }
@@ -570,7 +580,7 @@ int rule(char state[6][7], int turn, char player){
      7) 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고, 비어 있는 칸이 odd(even) threat인 경우 둔다.
      */
     col = ruleSeven(state, 'M');
-    if (col > -1 && col != dont && col != not_recommanded) {
+    if (col > -1 && col != dont && col != not_recommanded && possible[col]) {
         printf("rule 7) 내가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
         return col;
     }
@@ -579,7 +589,7 @@ int rule(char state[6][7], int turn, char player){
     
     //8) 상대방이 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고 비어 있는 칸이 odd(even) threat인 경우 막는다.
     col = ruleSeven(state, 'P');
-    if (col > -1 && col != dont && col != not_recommanded) {
+    if (col > -1 && col != dont && col != not_recommanded && possible[col]) {
         printf("rule 8) 상대가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
         return col;
     }
@@ -587,14 +597,20 @@ int rule(char state[6][7], int turn, char player){
     
     // 9) 가운데 칼럼의 높이가 4이하인 경우, 가운데에 둔다.
     col = ruleNine(state);
-    if(col > -1 && col != dont){
+    if(col > -1 && col != dont && possible[col]) {
         printf("rule 9) 가운데 칼럼의 높이가 4이하인 경우, 가운데에 둔다.\n");
         return col;
     }
     
     // 10) 이후로는 Search에서 사용한 evaluation function에 맡기기로 한다.
     col = ruleTen(state);
-    printf("rule 10) 이후로는 Search에서 사용한 evaluation function에 맡기기로 한다\n");
+      if(col > -1 && col != dont && possible[col]) {
+          printf("rule 10) 이후로는 Search에서 사용한 evaluation function에 맡기기로 한다\n");
+      }
+    
+    if(col == -1){
+        /*********** col이 찾아지지 않았을 때 대처 필요 ***********/
+    }
     
     return col;
 }
