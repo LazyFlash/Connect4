@@ -253,6 +253,14 @@ int main(void) {
                     printf("당신의 차례입니다. 둘 column을 고르세요:(1-7)");
                     scanf("%d", &playerchoice);
                     getchar();
+             
+                                      
+                    while(turn == 1 && playerchoice == 4){
+                        printf("선공일 경우, 첫 수에는 가운데에 둘 수 없습니다. 둘 column을 다시 고르세요:(1-7)");
+                        scanf("%d", &playerchoice);
+                        getchar();
+                    }
+                    
                     playerchoice—;
                     if (state[0][playerchoice] == 'X') {
                         dummy = nextState(state, playerchoice, 'P');
