@@ -831,9 +831,16 @@ int ruleSix(char state[6][7]) {
     int before, after;
     int not = -1;
     for (int i = 0; i < 7; i++) {
-        before = checkMajor(state, 'M');
+	if (state[0][col] != 'X')
+		continue;
+        
+	before = checkMajor(state, 'M');
         row1 = nextState(state, i, 'M');
-        row2 = nextState(state, i, 'P');
+	
+	if (state[0][col] != 'X')
+		continue;
+        
+	row2 = nextState(state, i, 'P');
         after = checkMajor(state, 'M');
         if (before < after) {
             not = i;
@@ -888,6 +895,9 @@ int ruleSeven(char state[6][7], char player) {
     int col = -1;
     int diff = 0;
     for (int i = 0; i < 7; i++) {
+	if (state[0][col] != 'X')
+		continue;
+	    
         before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
         row = nextState(state, i, player);
         after = checkMajor(state, player);                //i column에 돌을 둔 후의 major threat 개수
