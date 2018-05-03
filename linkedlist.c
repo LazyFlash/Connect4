@@ -547,19 +547,35 @@ int Rule(char state[6][7], int turn, char player){
         printf("Rule 5) 상대방이 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 막는다.\n");
         return col;
     }
-//        // J config을 확인
-//        col = RuleJ(state);
-//        if(col > -1 && col != dont) return col;
+	// J config을 확인
+	col = RuleJ(state);
+	if (col > -1 && col != dont) {
+		printf("make J configuration\n")
+		
+		return col;
+	}
+
     
-    /*
-     6) 자신의 major threat 보존헤
-     두면 다음 턴에 상대가 나의 3 in a row를 막는 경우, 먼저 두지 않게 약하게 금지한다. 되도록 두지 않되, 둘 수 있는 것이 그것만 남는 경우 둔다.)
-     + 상대방 major threat 막는 것 추가
-     minor threat - 카운트
-     7, 8번 rule에 대하여, odd/even threat는 Heuristic에서 설명한 바와 같습니다.
-     7) 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고, 비어 있는 칸이 odd(even) threat인 경우 둔다.
-     8) 상대방이 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고 비어 있는 칸이 odd(even) threat인 경우 막는다.
-     */
+	//6) 자신의 major threat 보존헤
+	//두면 다음 턴에 상대가 나의 3 in a row를 막는 경우, 먼저 두지 않게 약하게 금지한다. 되도록 두지 않되, 둘 수 있는 것이 그것만 남는 경우 둔다.)
+	not_recommanded = ruleSix(state)
+
+
+	/*
+	+ 상대방 major threat 막는 것 추가
+	minor threat - 카운트
+	7, 8번 rule에 대하여, odd/even threat는 Heuristic에서 설명한 바와 같습니다.
+	7) 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고, 비어 있는 칸이 odd(even) threat인 경우 둔다.
+	*/
+	col = ruleSeven(state);
+	if (col > -1 && col != dont && col != not_recommanded) {
+		printf("Rule 7) 내가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n")
+	}
+
+	
+	
+	//8) 상대방이 두었을 때 three in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고 비어 있는 칸이 odd(even) threat인 경우 막는다.
+    
 
     
     // 9) 가운데 칼럼의 높이가 4이하인 경우, 가운데에 둔다.
