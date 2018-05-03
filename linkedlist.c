@@ -611,7 +611,7 @@ bool checkfour(char state[6][7], char player){
         }
     }
     
-    for(i=5;i>=-1;i--){
+    for(i=5;i>-1;i--){
         for(j=0;j<=3;j++){
             if(state[i][j] == player){
                 if(state[i][j]==state[i][j+1]&&state[i][j]==state[i][j+2]&&state[i][j]==state[i][j+3]) return true;
@@ -652,7 +652,7 @@ bool checkthree(char state[6][7], char player){
     //    }
     
     // ㅡ
-    for(i=0;i<=5;i++){
+     for(i=5;i>-1;i--){
         for(j=0;j<=2;j++){
             if(state[i][j] == 'X' && state[i][j+4] == 'X' && state[i][j+1] == player){
                 if(state[i][j+1]==state[i][j+2]&&state[i][j+1]==state[i][j+3]) return true;
@@ -939,7 +939,7 @@ int ruleNine(char state[6][7]){
 
 int ruleTen(char state[6][7]){
     int col = -1;
-    int maxEval = 0;
+    int maxEval = -10000;
 
     for(int i = 0; i < 7; i++){
         int y = 5;
