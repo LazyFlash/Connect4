@@ -45,6 +45,8 @@ int RuleTwo(char state[6][7]);
 int RuleThree(char state[6][7]);
 int RuleFour(char state[6][7]);
 int RuleFive(char state[6][7]);
+int ruleSix(char state[6][7]);
+int ruleSeven(char state[6][7], int turn);
 int RuleJ(char state[6][7]);
 int RuleNine(char state[6][7]);
 
