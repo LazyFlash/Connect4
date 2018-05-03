@@ -867,7 +867,7 @@ int ruleSix(char state[6][7]) {
     int before, after;
     int not = -1;
     for (int i = 0; i < 7; i++) {
-        if (state[0][i] != 'X' && state[1][i] != 'X')
+        if (state[0][i] != 'X' || state[1][i] != 'X')
 			continue;
         
         before = checkMajor(state, 'M');
