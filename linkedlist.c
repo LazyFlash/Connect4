@@ -572,7 +572,7 @@ bool checkfour(char state[6][7], char player) {
 
 
 bool checkthree(char state[6][7], int row, char player) {
-	int i, j;
+	int j;
 
 	// ㅡ O O O ㅡ
 	for (j = 0; j <= 2; j++) {
