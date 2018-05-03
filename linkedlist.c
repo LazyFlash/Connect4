@@ -150,43 +150,43 @@ int Eval(char state[6][7]) {
 		for (col = 0; col < 4; col++) {   //오른쪽 위로 향하는 대각선
 			if (state[row][col] == 'M') {  //내 돌 두 개가 붙어있는 경우
 				if (state[row - 1][col + 1] == 'M') {
-					eval += 20;                                                   //+20점
+					eval += 50;                                                   //+50점
 					if (state[row - 2][col + 2] == 'M') {                         //세 개가 붙어있는 경우: 도합 120
 						eval += 100;
 						if (state[row - 3][col + 3] == 'M') {                    //내 돌 4개
 							eval += 110000;
 						}
 						else if (state[row - 3][col + 3] == 'P') {              //내 돌 3개에 상대 돌 1개로 막힘
-							eval -= 120;
+							eval -= 150;
 						}
 					}
 					else if (state[row - 2][col + 2] == 'P') {//내 돌 2개에 상대 돌 1개로 막힌 경우
-						eval -= 20;
+						eval -= 50;
 					}
-					else if (state[row - 2][col + 2] == 'X' && state[row - 3][col + 3] == 'M') {  // M M X M 꼴일 경우: 도합 110
+					else if (state[row - 2][col + 2] == 'X' && state[row - 3][col + 3] == 'M') {  // M M X M 꼴일 경우: 도합 140
 						eval += 90;
 					}
 
 				}
-				else if (state[row - 1][col + 1] == 'X' && state[row - 2][col + 2] == 'M' && state[row - 3][col + 3] == 'M') {// M X M M 꼴: 도합 110
-					eval += 110;
+				else if (state[row - 1][col + 1] == 'X' && state[row - 2][col + 2] == 'M' && state[row - 3][col + 3] == 'M') {// M X M M 꼴: 도합 140
+					eval += 140;
 				}
 			}
 
 			else if (state[row][col] == 'P') {
 				if (state[row - 1][col + 1] == 'P') {
-					eval -= 20;
+					eval -= 50;
 					if (state[row - 2][col + 2] == 'P') {
 						eval -= 100;
 						if (state[row - 3][col + 3] == 'P') {
 							eval -= 100000;
 						}
 						else if (state[row - 3][col + 3] == 'M') {
-							eval += 120;
+							eval += 150;
 						}
 					}
 					else if (state[row - 2][col + 2] == 'M') {
-						eval += 20;
+						eval += 50;
 					}
 					else if (state[row - 2][col + 2] == 'X' && state[row - 3][col + 3] == 'P') {
 						eval -= 90;
@@ -194,7 +194,7 @@ int Eval(char state[6][7]) {
 
 				}
 				else if (state[row - 1][col + 1] == 'X' && state[row - 2][col + 2] == 'M' && state[row - 3][col + 3] == 'M') {
-					eval -= 110;
+					eval -= 140;
 				}
 			}
 		}
@@ -202,47 +202,47 @@ int Eval(char state[6][7]) {
 
 			if (state[row][col] == 'M') {
 				if (state[row - 1][col - 1] == 'M') {
-					eval += 20;
+					eval += 50;
 					if (state[row - 2][col - 2] == 'M') {
 						eval += 100;
 						if (state[row - 3][col - 3] == 'M') {
 							eval += 110000;
 						}
 						else if (state[row - 3][col - 3] == 'P') {
-							eval -= 120;
+							eval -= 150;
 						}
 					}
 					else if (state[row - 2][col - 2] == 'P') {
-						eval -= 20;
+						eval -= 50;
 					}
 					else if (state[row - 2][col - 2] == 'X' && state[row - 3][col - 3] == 'M') {
 						eval += 90;
 					}
 				}
 				else if (state[row - 1][col - 1] == 'X' && state[row - 2][col - 2] == 'M' && state[row - 3][col - 3] == 'M') {
-					eval += 110;
+					eval += 140;
 				}
 			}
 			else if (state[row][col] == 'P') {
 				if (state[row - 1][col - 1] == 'P') {
-					eval -= 20;
+					eval -= 50;
 					if (state[row - 2][col - 2] == 'P') {
 						eval -= 100;
 						if (state[row - 3][col - 3] == 'P')
 							eval -= 100000;
 						else if (state[row - 3][col - 3] == 'M') {
-							eval += 120;
+							eval += 150;
 						}
 					}
 					else if (state[row - 2][col - 2] == 'M') {
-						eval += 20;
+						eval += 50;
 					}
 					else if (state[row - 2][col - 2] == 'X' && state[row - 3][col - 3] == 'P') {
 						eval -= 90;
 					}
 				}
 				else if (state[row - 1][col - 1] == 'X' && state[row - 2][col - 2] == 'P' && state[row - 3][col - 3] == 'P') {
-					eval -= 110;
+					eval -= 140;
 				}
 			}
 
@@ -252,48 +252,48 @@ int Eval(char state[6][7]) {
 		for (col = 0; col < 4; col++) {
 			if (state[row][col] == 'M') {
 				if (state[row][col + 1] == 'M') {
-					eval += 20;
+					eval += 50;
 					if (state[row][col + 2] == 'M') {
 						eval += 100;
 						if (state[row][col + 3] == 'M') {
 							eval += 110000;
 						}
 						else if (state[row][col + 3] == 'P') {
-							eval -= 120;
+							eval -= 150;
 						}
 					}
 					else if (state[row][col + 2] == 'P') {
-						eval -= 20;
+						eval -= 50;
 					}
 					else if (state[row][col - 2] == 'X' && state[row][col - 3] == 'M') {
 						eval += 90;
 					}
 				}
 				else if (state[row][col - 1] == 'X' && state[row][col - 2] == 'M' && state[row][col - 3] == 'M') {
-					eval += 110;
+					eval += 140;
 				}
 			}
 			else if (state[row][col] == 'P') {
 				if (state[row][col + 1] == 'P') {
-					eval -= 20;
+					eval -= 50;
 					if (state[row][col + 2] == 'P') {
 						eval -= 100;
 						if (state[row][col + 3] == 'P') {
 							eval -= 100000;
 						}
 						else if (state[row][col + 3] == 'M') {
-							eval += 120;
+							eval += 150;
 						}
 					}
 					else if (state[row][col + 2] == 'M') {
-						eval += 20;
+						eval += 50;
 					}
 					else if (state[row][col - 2] == 'X' && state[row][col - 3] == 'P') {
 						eval -= 90;
 					}
 				}
 				else if (state[row][col - 1] == 'X' && state[row][col - 2] == 'P' && state[row][col - 3] == 'P') {
-					eval -= 110;
+					eval -= 140;
 				}
 			}
 		}
@@ -303,35 +303,35 @@ int Eval(char state[6][7]) {
 		for (row = 5; row > 2; row--) {
 			if (state[row][col] == 'M') {
 				if (state[row - 1][col] == 'M') {                    //내 돌 2개가 연속
-					eval += 10;
+					eval += 30;
 					if (state[row - 2][col] == 'M') {               //내 돌 3개가 연속
 						eval += 50;
 						if (state[row - 3][col] == 'M') {           //내 돌 4개가 연속
 							eval += 110000;
 						}
 						else if (state[row - 3][col] == 'P') {     //내 돌 3개 위에 상대 돌 1개로 막힘
-							eval -= 60;
+							eval -= 80;
 						}
 					}
 					else if (state[row - 2][col] == 'P') {                                   //내 돌 2개 위에 상대 돌 1개로 막힘
-						eval -= 10;
+						eval -= 30;
 					}
 				}
 			}
 			else if (state[row][col] == 'P') {
 				if (state[row - 1][col] == 'P') {
-					eval -= 10;
+					eval -= 30;
 					if (state[row - 2][col] == 'P') {
 						eval -= 50;
 						if (state[row - 3][col] == 'P') {
 							eval -= 100000;
 						}
 						else if (state[row - 3][col] == 'M') {
-							eval += 60;
+							eval += 80;
 						}
 					}
 					else if (state[row - 2][col] == 'M') {
-						eval += 10;
+						eval += 30;
 					}
 				}
 			}

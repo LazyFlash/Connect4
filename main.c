@@ -9,7 +9,7 @@
 
 int main(void) {
 
-	int depth = 10;
+	int depth = 12;
 
 	char state[6][7] = {
 		{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
@@ -142,23 +142,20 @@ int main(void) {
 				gameIsnotTerminal = 0;
 			}
 			turn++;
-			if (turn == 12) {
-				depth = 11;
+			if (turn == 5) {
+				depth = 10;
 			}
 			else if (turn == 12) {
 				depth = 13;
 			}
 			else if (turn == 15) {
-				depth = 14;
-			}
-			else if (turn == 17) {
 				depth = 16;
 			}
-			else if (turn == 19) {
-				depth = 17;
+			else if (turn == 17) {
+				depth = 18;
 			}
-			else if (turn == 21) {
-				depth = 19;
+			else if (turn == 19) {
+				depth = 21;
 			}
 			else if (turn == 43) {
 				printf("무승부\n");
@@ -253,23 +250,20 @@ int main(void) {
 				gameIsnotTerminal = 0;
 			}
 			turn++;
-			if (turn == 12) {
-				depth = 11;
+			if (turn == 5) {
+				depth = 10;
 			}
 			else if (turn == 12) {
 				depth = 13;
 			}
 			else if (turn == 15) {
-				depth = 14;
-			}
-			else if (turn == 17) {
 				depth = 16;
 			}
-			else if (turn == 19) {
-				depth = 17;
+			else if (turn == 17) {
+				depth = 18;
 			}
-			else if (turn == 21) {
-				depth = 19;
+			else if (turn == 19) {
+				depth = 21;
 			}
 			else if (turn == 43) {
 				printf("무승부\n");
