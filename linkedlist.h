@@ -40,11 +40,11 @@ bool checkthree(char state[6][7], int row, char player);
 int ruleOne(char state[6][7]);
 int ruleTwo(char state[6][7]);
 // int ruleThree(char state[6][7]);
-int ruleFour(char state[6][7]);
-int ruleFive(char state[6][7]);
+int ruleFour(char state[6][7], bool dont[]);
+int ruleFive(char state[6][7], bool dont[]);
 int ruleJ(char state[6][7]);
-int ruleSix(char state[6][7]);
-int ruleSeven(char state[6][7], char player);
+int ruleSix(char state[6][7], int col);
+int ruleSeven(char state[6][7], char player, bool dont[], bool n_r[]);
 int ruleNine(char state[6][7]);
 int ruleTen(char state[6][7]);
 int checkMajor(char state[6][7], char player);            //board와 player 정보를 받아서 해당 플레이어가 갖고 있는 major threat 개수를 반환
