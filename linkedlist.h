@@ -11,15 +11,15 @@
 typedef int bool;
 
 typedef struct node {
-    char stateboard[6][7];
-    struct node* nextsearch;
-    int score;
-    int col;
+	char stateboard[6][7];
+	struct node* nextsearch;
+	int score;
+	int col;
 }Node;
 
 typedef struct list {
-    Node* firstnode;
-    Node* lastnode;
+	Node* firstnode;
+	Node* lastnode;
 }List;
 
 List* createList(void);

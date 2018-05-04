@@ -1,6 +1,6 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "linkedlist.h"
+#include "list.h"
 #include <time.h>
 
 
