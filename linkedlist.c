@@ -425,7 +425,7 @@ int isFull(char state[6][7]) {
 int rule(char state[6][7], int turn, char player) {
     int col = -1;
     bool dont[7];
-    int not_recommanded = -1;
+    bool not_recommanded[7];
     
     
     //Turn 수가 3 이하일 때
@@ -469,16 +469,16 @@ int rule(char state[6][7], int turn, char player) {
     
 
     // 4. M이 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 둔다.
-    col = ruleFour(state);
-    if (col > -1 && !dont[col]) {
+    col = ruleFour(state, dont);
+    if (col > -1) {
         printf("rule 3. M이 P의 승리를 돕는다면 두지 않는다. \n");
         printf("rule 4. M이 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 둔다. \n");
         return col;
     }
     
     // 5. P가 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 막는다.
-    col = ruleFive(state);
-    if (col > -1 && !dont[col]) {
+    col = ruleFive(state, dont);
+    if (col > -1) {
         printf("rule 3. M이 P의 승리를 돕는다면 두지 않는다. \n");
         printf("rule 5. P가 두었을 때 연속된 3개가 되며, 그 양 옆이 모두 비어 있을 경우 막는다. \n");
         return col;
@@ -497,8 +497,17 @@ int rule(char state[6][7], int turn, char player) {
     
     //6. M의 major threat 보존하기 위해 다음 턴에 P가 M의 3 in a row를 막는 경우, 먼저 두지 않게 약하게 금지한다.
     // 단, 되도록 두지 않되, 둘 수 있는 것이 그것만 남는 경우 둔다.
-    not_recommanded = ruleSix(state);
-    
+    int tmprow_r6 = -1;
+	int tmp_r6 = -1;
+
+	for (int i = 0; i < 7; i++) {
+		tmp_r6 = ruleSix(state, i);
+		
+		if (tmp_r6 == 1)
+			not_recommanded[i] = true;
+		else
+			not_recommanded[i] = false;
+	}
     
     /*
      상대방 major threat 막는 것 추가
@@ -507,8 +516,8 @@ int rule(char state[6][7], int turn, char player) {
    
     // 7. M이 두었을 때 3 in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고,
     //    비어 있는 칸이 odd(even) threat인 경우 둔다.
-    col = ruleSeven(state, 'M');
-    if (col > -1 && !dont[col]  && col != not_recommanded) {
+    col = ruleSeven(state, 'M', dont, not_recommanded);
+    if (col > -1) {
         printf("rule 3. M이 P의 승리를 돕는다면 두지 않는다. \n");
         printf("rule 6. M의 major threat을 보존한다. \n");
         printf("rule 7. M이 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 둔다.\n");
@@ -519,8 +528,8 @@ int rule(char state[6][7], int turn, char player) {
     
     //8. P가 두었을 때 3 in a row (길이가 4인 box중 3개를 차지하고 나머지 한 칸은 빈칸)를 만들고,
     //   비어 있는 칸이 odd(even) threat인 경우 막는다.
-    col = ruleSeven(state, 'P');
-    if (col > -1 && !dont[col] && col != not_recommanded) {
+    col = ruleSeven(state, 'P', dont, not_recommanded);
+    if (col > -1) {
         printf("rule 3. M이 P의 승리를 돕는다면 두지 않는다. \n");
         printf("rule 6. M의 major threat을 보존한다. \n");
         printf("rule 8. P가 두었을 때 가장 많은 major threat을 만들 수 있는 곳에 두어 막는다.\n");
@@ -736,13 +745,15 @@ int ruleTwo(char state[6][7]) {
 //    return dont;
 //}
 
-int ruleFour(char state[6][7]) {
+int ruleFour(char state[6][7], bool dont[]) {
     int col = -1;
     int row = -1;
     
     for (int i = 1; i < 6; i++) {
         if (state[0][i] != 'X')
             continue;
+        else if (dont[i] == 1)
+			continue;
         
         row = nextState(state, i, 'M');
         
@@ -759,13 +770,15 @@ int ruleFour(char state[6][7]) {
 }
 
 
-int ruleFive(char state[6][7]) {
+int ruleFive(char state[6][7], bool dont[]) {
     int col = -1;
     int row = -1;
     
     for (int i = 1; i < 6; i++) {
         if (state[0][i] != 'X')
             continue;
+        else if (dont[i] == 1)
+			continue;
         
         row = nextState(state, i, 'P');
         
@@ -787,25 +800,24 @@ int ruleFive(char state[6][7]) {
 /* 내가 어떤 column에 돌을 두었을 때 상대가 그 위에 돌을 놓아 나의 major threat을 막는 경우를 피하기 위한 rule
  내가 돌을 둔 column과 상대가 돌을 둔 column이 다르다면 애초에 그곳에 둔다면 이길 수 있는 상황이기 때문에
  rule 1에서 체크 가능하기 때문에 나의 돌과 상대의 돌이 같은 column에 놓이는 경우만 search */
-int ruleSix(char state[6][7]) {
+int ruleSix(char state[6][7], int col) {
     int row1, row2;
-    int before, after;
-    int not = -1;
-    for (int i = 0; i < 7; i++) {
-        if (state[0][i] != 'X' || state[1][i] != 'X')
-            continue;
-        
-        before = checkMajor(state, 'M');
-        row1 = nextState(state, i, 'M');
-        row2 = nextState(state, i, 'P');
-        after = checkMajor(state, 'M');
-        if (before < after) {
-            not = i;
-        }
-        state[row2][i] = 'X';
-        state[row1][i] = 'X';
-    }
-    return not;
+	int before, after;
+	int not = 0;
+	if (state[0][col] != 'X' || state[1][col] != 'X')
+		return -1;
+
+	before = checkMajor(state, 'M');
+	row1 = nextState(state, col, 'M');
+	row2 = nextState(state, col, 'P');
+	after = checkMajor(state, 'M');
+	if (before > after) {
+		not = 1;
+	}
+	state[row2][col] = 'X';
+	state[row1][col] = 'X';
+
+	return not;
 }
 
 /* 내가 돌을 두었을 때 J configuration이 나타난다면 그 column을 반환*/
@@ -846,7 +858,7 @@ int ruleJ(char state[6][7]) {
     return col;
 }
 
-int ruleSeven(char state[6][7], char player) {
+int ruleSeven(char state[6][7], char player, bool dont[], bool n_r[]) {
     int row;
     int before, after;
     int col = -1;
@@ -854,6 +866,8 @@ int ruleSeven(char state[6][7], char player) {
     for (int i = 0; i < 7; i++) {
         if (state[0][i] != 'X')
             continue;
+            else if (dont[i] == 1 || n_r[i] == 1)
+                continue;
         
         before = checkMajor(state, player);            //i column에 돌을 두기 전의 major threat 개수
         row = nextState(state, i, player);
@@ -869,6 +883,8 @@ int ruleSeven(char state[6][7], char player) {
         for (int i = 0; i < 7; i++) {
             if (state[0][i] != 'X')
                 continue;
+            else if (dont[i] == 1 || n_r[i] == 1)
+			continue;
             
             before = checkMinor(state, player);
             row = nextState(state, i, player);
