@@ -9,7 +9,7 @@
 
 int main(void) {
 
-	int depth = 12;
+	int depth = 11;
 
 	char state[6][7] = {
 		{ 'X', 'X', 'X', 'X', 'X', 'X', 'X' },
@@ -54,7 +54,7 @@ int main(void) {
 		AIfirst = 1;
 	}
 
-	if (AIfirst) {
+	if (AIfirst) {//Ai 선공인 경우
 
 		while (gameIsnotTerminal) {
 			printf("\n<<turn%d>>\n", turn);
@@ -64,7 +64,7 @@ int main(void) {
 				getchar();
 				start = time(NULL);
 
-				//turn==1일 때는 공통 코드 쓰기.
+				//turn==1, 3일 때는 공통 코드 쓰기.
 				if (turn == 1) {
 					end = time(NULL);
 					interval = difftime(end, start);
@@ -79,6 +79,37 @@ int main(void) {
 
 					continue;
 				}
+				else if (turn == 3) {
+					if (state[4][2] == 'P' || state[4][3] == 'P') {//상대의 다음 수 3: 2 또는 4   ->4 선택/4: 3 또는 4 ->4 선택
+						end = time(NULL);
+						interval = difftime(end, start);
+						dummy = nextState(state, 3, 'M');
+						printf("%f초 걸림\n", interval);
+						if (mode == 1)
+							printf("Search mode: 4번 column에 착수\n");
+						else if (mode == 2)
+							printf("Rule mode: 4번 column에 착수\n");
+						draw(state);
+						turn++;
+
+						continue;
+					}
+					else if (state[4][2] == 'P' || state[4][5] == 'P') {//	5 : 3 또는 5  -> 3 선택/6 : 2 - 6까지 아무거나-> 3 선택
+						end = time(NULL);
+						interval = difftime(end, start);
+						dummy = nextState(state, 2, 'M');
+						printf("%f초 걸림\n", interval);
+						if (mode == 1)
+							printf("Search mode: 3번 column에 착수\n");
+						else if (mode == 2)
+							printf("Rule mode: 3번 column에 착수\n");
+						draw(state);
+						turn++;
+
+						continue;
+					}
+				}
+
 
 				if (mode == 1) {   //Search 모드
 					appendNextNodes(childList, state, 'M');
@@ -146,16 +177,19 @@ int main(void) {
 				depth = 10;
 			}
 			else if (turn == 12) {
-				depth = 13;
+				depth = 11;
 			}
 			else if (turn == 15) {
-				depth = 16;
+				depth = 13;
 			}
 			else if (turn == 17) {
-				depth = 18;
+				depth = 15;
 			}
 			else if (turn == 19) {
-				depth = 21;
+				depth = 17;
+			}
+			else if (turn == 20) {
+				depth = 20;
 			}
 			else if (turn == 43) {
 				printf("무승부\n");
@@ -187,6 +221,38 @@ int main(void) {
 
 
 					continue;
+				}
+				else if (turn == 4) {
+					if (state[4][2] == 'P') {//상대가 3: 3
+						end = time(NULL);
+						interval = difftime(end, start);
+						dummy = nextState(state, 2, 'M');
+						printf("%f초 걸림\n", interval);
+						if (mode == 1)
+							printf("Search mode: 3번 column에 착수\n");
+						else if (mode == 2)
+							printf("Rule mode: 3번 column에 착수\n");
+						draw(state);
+						turn++;
+
+
+						continue;
+					}
+					else if (state[4][3] == 'P') {//상대가 4: 4
+						end = time(NULL);
+						interval = difftime(end, start);
+						dummy = nextState(state, 3, 'M');
+						printf("%f초 걸림\n", interval);
+						if (mode == 1)
+							printf("Search mode: 4번 column에 착수\n");
+						else if (mode == 2)
+							printf("Rule mode: 4번 column에 착수\n");
+						draw(state);
+						turn++;
+
+
+						continue;
+					}
 				}
 
 				if (mode == 1) {  //Search 모드
@@ -254,16 +320,19 @@ int main(void) {
 				depth = 10;
 			}
 			else if (turn == 12) {
-				depth = 13;
+				depth = 11;
 			}
 			else if (turn == 15) {
-				depth = 16;
+				depth = 13;
 			}
 			else if (turn == 17) {
-				depth = 18;
+				depth = 15;
 			}
 			else if (turn == 19) {
-				depth = 21;
+				depth = 17;
+			}
+			else if (turn == 20) {
+				depth = 20;
 			}
 			else if (turn == 43) {
 				printf("무승부\n");

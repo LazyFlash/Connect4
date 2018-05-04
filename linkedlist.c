@@ -438,11 +438,11 @@ int rule(char state[6][7], int turn, char player) {
 			possible[i] = false;
 	}
 
-	//M이 먼저
+	/*//M이 먼저
 	if (player == 'M' && turn == 3) {
-		if (state[0][3] == 'X') return 3;
-		else return 4;  // C1 d1   O   O   =   =   O   O   O
-	}
+	if (state[0][3] == 'X') return 3;
+	else return 4;  // C1 d1   O   O   =   =   O   O   O
+	}*/
 
 
 	// 1) 내 돌이 세 개 이어져 있으면 둔다.
