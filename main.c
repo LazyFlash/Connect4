@@ -142,7 +142,9 @@ int main(void) {
 				}
 				else if (mode == 2) {  //Rule 모드
 					ruleresult = rule(state, turn, 'M');
+					end = time(NULL);
 					dummy = nextState(state, ruleresult, 'M');
+					interval = difftime(end, start);
 					printf("%f초 걸림\n", interval);
 					printf("Rule mode: %d번 column에 착수\n", ruleresult + 1);
 				}
@@ -285,7 +287,9 @@ int main(void) {
 				}
 				else if (mode == 2) {  //Rule 모드
 					ruletworesult = rule(state, turn, 'P');
+					end = time(NULL);
 					dummy = nextState(state, ruletworesult, 'M');
+					interval = difftime(end, start);
 					printf("%f초 걸림\n", interval);
 					printf("Rule mode: %d번 column에 착수\n", ruletworesult + 1);
 				}
