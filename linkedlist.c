@@ -1,6 +1,5 @@
 #include "linkedlist.h"
 
-//main에서 전역변수 state 하나를 계속 사용할 것. 탐색할 때는 state의 내용을 복사해서 복사본 사용. 수를 고르고 update할 때는 원본을 갱신해야 함.
 
 
 List* createList() {   //게임시작 전 작업
@@ -56,7 +55,7 @@ void appendNextNodes(List* list, char state[6][7], char player) {  //현재 전�
 				}
 				newnode->score = 0;
 				newnode->nextsearch = NULL;
-				append(list, newnode);//list에 append하는 함수 만들면 곧장 append(list, newnode); 추가하기
+				append(list, newnode);
 			}
 		}
 	}
@@ -64,7 +63,6 @@ void appendNextNodes(List* list, char state[6][7], char player) {  //현재 전�
 
 
 int AlphaBeta(char state[6][7], int depth, int Alpha, int Beta, char player) {
-	//main에서 사용: 1. main에서 current state의 자식리스트를 만든다.
 	int A = Alpha;
 	int B = Beta;
 
@@ -151,7 +149,7 @@ int Eval(char state[6][7]) {
 			if (state[row][col] == 'M') {  //내 돌 두 개가 붙어있는 경우
 				if (state[row - 1][col + 1] == 'M') {
 					eval += 50;                                                   //+50점
-					if (state[row - 2][col + 2] == 'M') {                         //세 개가 붙어있는 경우: 도합 120
+					if (state[row - 2][col + 2] == 'M') {                         //세 개가 붙어있는 경우: 도합 150
 						eval += 100;
 						if (state[row - 3][col + 3] == 'M') {                    //내 돌 4개
 							eval += 110000;
@@ -428,11 +426,11 @@ int rule(char state[6][7], int turn, char player) {
 	bool not_recommanded[7];
 
 
-	//Turn 수가 3 이하일 때
+	/*//Turn 수가 3 이하일 때
 	if (player == 'M' && turn == 3) {
 		if (state[0][3] == 'X') return 3;
 		else return 4;  // C1 d1   O   O   =   =   O   O   O
-	}
+	}*/
 
 	// 우선순위대로 룰을 시행한다.
 	// 1. M이 세 개 이어져 있으면 둔다.
