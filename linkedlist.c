@@ -462,9 +462,9 @@ int rule(char state[6][7], int turn, char player) {
         state[tmprow][i] = 'X';
         
         if(tmp >= 0 && tmp <=6 )
-            dont[tmp] = true;
+            dont[i] = true;
         else
-            dont[tmp] = false;
+            dont[i] = false;
     }
     
 
