@@ -17,14 +17,17 @@ C
  
 #### 5. 첨부 파일
 * main.c : 인터페이스 및 기본 함수 관련 파일
-* main.txt : main.c text
 * linkedlist.c : Heuristic과 Rule 함수 관련 파일
-* linkedlist.txt : linkedlist.c text
 * linkedlist.h : linkedlist.c의 헤더 파일
-* linkedlist.txt : linkedlist.h text
 * README.md : 마크다운 문서
 * README.txt : 마크다운 문서
-* Connect4AIReport.docx : 보고서
-* Connect4AIReport.pdf : 보고서
+* 신기하고굉장한조_보고서.docx
+* 신기하고굉장한조_보고서.pdf
+
+
+* main.txt : main.c text
+* linkedlistc.txt : linkedlist.c text
+* linkedlisth.txt : linkedlist.h text
+
 
  
