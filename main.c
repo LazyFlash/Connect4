@@ -80,7 +80,7 @@ int main(void) {
 					continue;
 				}
 				else if (turn == 3) {
-					if (state[4][2] == 'P' || state[4][3] == 'P') {//상대의 다음 수 3: 2 또는 4   ->4 선택/4: 3 또는 4 ->4 선택
+					if (state[4][2] == 'P' || state[5][3] == 'P') {//상대의 다음 수 3: 2 또는 4   ->4 선택/4: 3 또는 4 ->4 선택
 						end = time(NULL);
 						interval = difftime(end, start);
 						dummy = nextState(state, 3, 'M');
@@ -94,7 +94,7 @@ int main(void) {
 
 						continue;
 					}
-					else if (state[4][2] == 'P' || state[4][5] == 'P') {//	5 : 3 또는 5  -> 3 선택/6 : 2 - 6까지 아무거나-> 3 선택
+					else if (state[5][4] == 'P' || state[5][5] == 'P') {//	5 : 3 또는 5  -> 3 선택/6 : 2 - 6까지 아무거나-> 3 선택
 						end = time(NULL);
 						interval = difftime(end, start);
 						dummy = nextState(state, 2, 'M');
@@ -224,8 +224,8 @@ int main(void) {
 
 					continue;
 				}
-				else if (turn == 4) {
-					if (state[4][2] == 'P') {//상대가 3: 3
+				else if (turn == 4) {//상대가 이미 turn1에서 3또는 5에 둠을 가정
+					if (state[4][2] == 'P'&&state[5][2] == 'P') {//상대가 3->3: 3
 						end = time(NULL);
 						interval = difftime(end, start);
 						dummy = nextState(state, 2, 'M');
@@ -234,6 +234,21 @@ int main(void) {
 							printf("Search mode: 3번 column에 착수\n");
 						else if (mode == 2)
 							printf("Rule mode: 3번 column에 착수\n");
+						draw(state);
+						turn++;
+
+
+						continue;
+					}
+					else if (state[4][4] == 'P'&&state[5][4] == 'P') {//상대가 5->5:5
+						end = time(NULL);
+						interval = difftime(end, start);
+						dummy = nextState(state, 4, 'M');
+						printf("%f초 걸림\n", interval);
+						if (mode == 1)
+							printf("Search mode: 5번 column에 착수\n");
+						else if (mode == 2)
+							printf("Rule mode: 5번 column에 착수\n");
 						draw(state);
 						turn++;
 
